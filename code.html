@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pressure, Heading, and VOR Converters</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Light mode styles (optional, as default styles are light) */
+        body.light-mode {
+            background-color: #fff;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Pressure Converter</h2>
+
+    <form id="pressureConverterForm">
+        <label for="pressure">Pressure (hPa):</label>
+        <input type="number" id="pressure" name="pressure" required>
+
+        <label for="unit">Select Unit:</label>
+        <select id="unit" name="unit">
+            <option value="inHg">inHg</option>
+            <option value="mb">Millibars</option>
+        </select>
+
+        <button type="button" onclick="convertPressure()">Convert Pressure</button>
+
+        <p id="result"></p>
+    </form>
+
+    <hr>
+
+    <h2>Reciprocal-Heading Converter</h2>
+
+    <form id="reciprocalConverterForm">
+        <label for="heading">Heading (degrees):</label>
+        <input type="number" id="heading" name="heading" required>
+
+        <button type="button" onclick="convertHeading()">Convert Heading</button>
+
+        <p id="reciprocalResult"></p>
+    </form>
+
+    <!-- Your existing VOR Radial & Bearing Converter can go here -->
+
+    
+
+ 
+
+    <script>
+        function convertPressure() {
+            var pressure = parseFloat(document.getElementById("pressure").value);
+            var selectedUnit = document.getElementById("unit").value;
+
+            if (isNaN(pressure)) {
+                alert("Please enter a valid number for pressure.");
+                return;
+            }
+
+            var result;
+            switch (selectedUnit) {
+                case "inHg":
+                    result = pressure * 0.029529983071445;
+                    break;
+                case "mb":
+                    result = pressure;
+                    break;
+                default:
+                    alert("Invalid unit selected.");
+                    return;
+            }
+
+            document.getElementById("result").innerHTML = "Converted Pressure: " + result.toFixed(2) + " " + selectedUnit;
+        }
+
+        function convertHeading() {
+            var heading = parseFloat(document.getElementById("heading").value);
+
+            if (isNaN(heading)) {
+                alert("Please enter a valid number for heading.");
+                return;
+            }
+
+            var reciprocalHeading = (heading + 180) % 360;
+
+            document.getElementById("reciprocalResult").innerHTML = "Reciprocal Heading: " + reciprocalHeading.toFixed(2) + " degrees";
+        }
+
+      
+</body>
+</html>
+
