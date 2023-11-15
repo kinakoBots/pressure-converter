@@ -8,21 +8,17 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            transition: background-color 0.3s ease;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
         }
-
         input {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
             box-sizing: border-box;
         }
-
         button {
             padding: 10px;
             background-color: #4CAF50;
@@ -30,21 +26,8 @@
             border: none;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #45a049;
-        }
-
-        /* Dark mode styles */
-        body.dark-mode {
-            background-color: #333;
-            color: #fff;
-        }
-
-        /* Light mode styles (optional, as default styles are light) */
-        body.light-mode {
-            background-color: #fff;
-            color: #333;
         }
     </style>
 </head>
@@ -81,10 +64,6 @@
     </form>
 
     <!-- Your existing VOR Radial & Bearing Converter can go here -->
-
-    
-
- 
 
     <script>
         function convertPressure() {
@@ -124,8 +103,10 @@
 
             document.getElementById("reciprocalResult").innerHTML = "Reciprocal Heading: " + reciprocalHeading.toFixed(2) + " degrees";
         }
+    </script>
 
-      
 </body>
 </html>
+
+
 
