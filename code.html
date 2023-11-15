@@ -1,7 +1,7 @@
 <script>
     function convertPressure() {
         var pressure = parseFloat(document.getElementById("pressure").value);
-        var selectedUnit = document.getElementById("unit").value;
+        var selectedUnit = document.getElementById("conversionType").value;
 
         if (isNaN(pressure)) {
             alert("Please enter a valid number for pressure.");
@@ -10,8 +10,11 @@
 
         var result;
         switch (selectedUnit) {
-            case "inHg":
-                result = pressure * 0.029529983071445;
+            case "inHgToHpa":
+                result = pressure * 33.8639;
+                break;
+            case "hPaToInHg":
+                result = pressure / 33.8639;
                 break;
             case "mb":
                 result = pressure;
@@ -21,7 +24,7 @@
                 return;
         }
 
-        document.getElementById("result").innerHTML = "Converted Pressure: " + result.toFixed(2) + " " + selectedUnit;
+        document.getElementById("result").innerHTML = "Converted Pressure: " + result.toFixed(2) + (selectedUnit === "inHgToHpa" ? " hPa" : selectedUnit === "hPaToInHg" ? " inches of mercury" : " millibars");
     }
 
     function convertHeading() {
@@ -42,7 +45,6 @@
         document.body.classList.toggle('light-mode');
     }
 
-    // Additional pressure conversion functions
     function inchesToHpa(inches) {
         var inchesToHpaFactor = 33.8639;
         return inches * inchesToHpaFactor;
