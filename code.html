@@ -1,138 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pressure, Heading, and VOR Converters</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            transition: background-color 0.3s ease;
+<script>
+    function convertPressure() {
+        var pressure = parseFloat(document.getElementById("pressure").value);
+        var selectedUnit = document.getElementById("unit").value;
+
+        if (isNaN(pressure)) {
+            alert("Please enter a valid number for pressure.");
+            return;
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* Dark mode styles */
-        body.dark-mode {
-            background-color: #333;
-            color: #fff;
-        }
-
-        /* Light mode styles (optional, as default styles are light) */
-        body.light-mode {
-            background-color: #fff;
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-
-    <h2>Pressure Converter</h2>
-
-    <form id="pressureConverterForm">
-        <label for="pressure">Pressure (hPa):</label>
-        <input type="number" id="pressure" name="pressure" required>
-
-        <label for="unit">Select Unit:</label>
-        <select id="unit" name="unit">
-            <option value="inHg">inHg</option>
-            <option value="mb">Millibars</option>
-        </select>
-
-        <button type="button" onclick="convertPressure()">Convert Pressure</button>
-
-        <p id="result"></p>
-    </form>
-
-    <hr>
-
-    <h2>Reciprocal-Heading Converter</h2>
-
-    <form id="reciprocalConverterForm">
-        <label for="heading">Heading (degrees):</label>
-        <input type="number" id="heading" name="heading" required>
-
-        <button type="button" onclick="convertHeading()">Convert Heading</button>
-
-        <p id="reciprocalResult"></p>
-    </form>
-
-    <!-- Your existing VOR Radial & Bearing Converter can go here -->
-
-    <hr>
-
-    <h2>Settings</h2>
-    <button onclick="toggleMode()">Toggle Dark/Light Mode</button>
-
-    <script>
-        function convertPressure() {
-            var pressure = parseFloat(document.getElementById("pressure").value);
-            var selectedUnit = document.getElementById("unit").value;
-
-            if (isNaN(pressure)) {
-                alert("Please enter a valid number for pressure.");
+        var result;
+        switch (selectedUnit) {
+            case "inHg":
+                result = pressure * 0.029529983071445;
+                break;
+            case "mb":
+                result = pressure;
+                break;
+            default:
+                alert("Invalid unit selected.");
                 return;
-            }
-
-            var result;
-            switch (selectedUnit) {
-                case "inHg":
-                    result = pressure * 0.029529983071445;
-                    break;
-                case "mb":
-                    result = pressure;
-                    break;
-                default:
-                    alert("Invalid unit selected.");
-                    return;
-            }
-
-            document.getElementById("result").innerHTML = "Converted Pressure: " + result.toFixed(2) + " " + selectedUnit;
         }
 
-        function convertHeading() {
-            var heading = parseFloat(document.getElementById("heading").value);
+        document.getElementById("result").innerHTML = "Converted Pressure: " + result.toFixed(2) + " " + selectedUnit;
+    }
 
-            if (isNaN(heading)) {
-                alert("Please enter a valid number for heading.");
-                return;
-            }
+    function convertHeading() {
+        var heading = parseFloat(document.getElementById("heading").value);
 
-            var reciprocalHeading = (heading + 180) % 360;
-
-            document.getElementById("reciprocalResult").innerHTML = "Reciprocal Heading: " + reciprocalHeading.toFixed(2) + " degrees";
+        if (isNaN(heading)) {
+            alert("Please enter a valid number for heading.");
+            return;
         }
 
-        function toggleMode() {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
+        var reciprocalHeading = (heading + 180) % 360;
+
+        document.getElementById("reciprocalResult").innerHTML = "Reciprocal Heading: " + reciprocalHeading.toFixed(2) + " degrees";
+    }
+
+    function toggleMode() {
+        document.body.classList.toggle('dark-mode');
+        document.body.classList.toggle('light-mode');
+    }
+
+    // Additional pressure conversion functions
+    function inchesToHpa(inches) {
+        var inchesToHpaFactor = 33.8639;
+        return inches * inchesToHpaFactor;
+    }
+
+    function hpaToInches(hpa) {
+        var hpaToInchesFactor = 0.029529983071445;
+        return hpa * hpaToInchesFactor;
+    }
+
+    function convertPressureInchesToHpa() {
+        var pressureInInches = parseFloat(document.getElementById("pressure").value);
+
+        if (isNaN(pressureInInches)) {
+            alert("Please enter a valid number for pressure.");
+            return;
         }
-    </script>
-</body>
-</html>
 
+        var resultHpa = inchesToHpa(pressureInInches);
 
+        document.getElementById("result").innerHTML = "Converted Pressure: " + resultHpa.toFixed(2) + " hPa";
+    }
 
+    function convertPressureHpaToInches() {
+        var pressureInHpa = parseFloat(document.getElementById("pressure").value);
+
+        if (isNaN(pressureInHpa)) {
+            alert("Please enter a valid number for pressure.");
+            return;
+        }
+
+        var resultInches = hpaToInches(pressureInHpa);
+
+        document.getElementById("result").innerHTML = "Converted Pressure: " + resultInches.toFixed(2) + " inches of mercury";
+    }
+</script>
