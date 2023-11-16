@@ -4,115 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pressure Converter</title>
-  <style>
+    <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
-
-        #converter-container {
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            color: #333;
-        }
-
         label {
             display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
             margin-bottom: 10px;
-        }
-
-        input,
-        select {
-            width: calc(100% - 16px);
-            padding: 10px;
-            margin-bottom: 15px;
             box-sizing: border-box;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background-color: #ecf0f1;
-            color: #333;
         }
-
         button {
-            padding: 12px;
-            background-color: #2980b9;
-            color: #fff;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s;
         }
-
         button:hover {
-            background-color: #2575a8;
+            background-color: #45a049;
         }
 
-        #result {
-            font-size: 18px;
-            margin-top: 10px;
+        .tabs {
+            display: flex;
+            list-style: none;
+            padding: 0;
         }
 
-        p {
-            margin-top: 10px;
+        .tab {
+            margin-right: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .tab-content {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<div id="converter-container">
-    <h2>Pressure Converter</h2>
+    <ul class="tabs">
+        <li class="tab" onclick="showTab('pressure-converter')">Pressure Converter</li>
+        <li class="tab" onclick="showTab('holding-pattern')">Holding Pattern Calculator</li>
+    </ul>
 
-    <label for="pressure">Pressure:</label>
-    <input type="number" id="pressure" placeholder="Enter pressure value" required>
+    <div id="pressure-converter" class="tab-content">
+        <h2>Pressure Converter</h2>
 
-    <label for="conversionDirection">Select Conversion Direction:</label>
-    <select id="conversionDirection">
-        <option value="toInches">hPa to Inches of Mercury</option>
-        <option value="toHpa">Inches of Mercury to hPa</option>
-    </select>
+        <form id="pressureConverterForm">
+            <label for="pressure">Pressure (hPa):</label>
+            <input type="number" id="pressure" name="pressure" required>
 
-    <button onclick="convertPressure()">Convert</button>
+            <label for="unit">Select Unit:</label>
+            <select id="unit" name="unit">
+                <option value="inHg">inHg</option>
+                <option value="mb">Millibars</option>
+            </select>
 
-    <p id="result"></p>
-   <p> MADE BY HADI</p>
-</div>
+            <button type="button" onclick="convertPressure()">Convert Pressure</button>
 
-<script>
-    function convertPressure() {
-        var pressure = parseFloat(document.getElementById("pressure").value);
-        var conversionDirection = document.getElementById("conversionDirection").value;
+            <p id="result"></p>
+        </form>
+    </div>
 
-        if (isNaN(pressure)) {
-            alert("Please enter a valid number for pressure.");
-            return;
+    <div id="holding-pattern" class="tab-content">
+        <h2>Holding Pattern Calculator</h2>
+        <!-- Add your holding pattern calculator content here -->
+        <p>This is the content for the Holding Pattern Calculator tab.</p>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tabs
+            var tabs = document.getElementsByClassName('tab-content');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].style.display = 'none';
+            }
+
+            // Show the selected tab
+            document.getElementById(tabId).style.display = 'block';
         }
 
-        // Conversion factor for hectopascals to inches of mercury
-        var hpaToInchesFactor = 0.029529983071445;
+        function convertPressure() {
+            // Get values from input fields
+            var pressure = parseFloat(document.getElementById("pressure").value);
+            var selectedUnit = document.getElementById("unit").value;
 
-        if (conversionDirection === "toInches") {
-            // Convert pressure to inches of mercury
-            var resultInInches = pressure * hpaToInchesFactor;
-            document.getElementById("result").innerHTML = "Converted Pressure: " + resultInInches.toFixed(2) + " inches of mercury";
-        } else if (conversionDirection === "toHpa") {
-            // Convert inches of mercury to hectopascals
-            var inchesToHpa = pressure / hpaToInchesFactor;
-            document.getElementById("result").innerHTML = "Converted Pressure: " + inchesToHpa.toFixed(2) + " hPa";
+            // Check if the input is valid
+            if (isNaN(pressure)) {
+                alert("Please enter a valid number for pressure.");
+                return;
+            }
+
+            // Perform the conversion
+            var result;
+            switch (selectedUnit) {
+                case "inHg":
+                    result = pressure * 0.029529983071445;
+                    break;
+                case "mb":
+                    result = pressure;
+                    break;
+                default:
+                    alert("Invalid unit selected.");
+                    return;
+            }
+
+            // Display the result
+            document.getElementById("result").innerHTML = "Converted Pressure: " + result.toFixed(2) + " " + selectedUnit;
         }
-    }
-</script>
+    </script>
 
 </body>
 </html>
+
