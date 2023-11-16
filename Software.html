@@ -34,6 +34,7 @@
             display: flex;
             list-style: none;
             padding: 0;
+            margin-bottom: 20px;
         }
 
         .tab {
@@ -51,14 +52,14 @@
 </head>
 <body>
 
+    <h2>Pressure Converter</h2>
+
     <ul class="tabs">
         <li class="tab" onclick="showTab('pressure-converter')">Pressure Converter</li>
         <li class="tab" onclick="showTab('holding-pattern')">Holding Pattern Calculator</li>
     </ul>
 
     <div id="pressure-converter" class="tab-content">
-        <h2>Pressure Converter</h2>
-
         <form id="pressureConverterForm">
             <label for="pressure">Pressure (hPa):</label>
             <input type="number" id="pressure" name="pressure" required>
@@ -125,4 +126,5 @@
 
 </body>
 </html>
+
 
