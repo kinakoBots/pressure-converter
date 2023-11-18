@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aircraft Hangar</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+
+        #hangar {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .hangar-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .aircraft {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .aircraft:hover {
+            background-color: #e6e6e6;
+        }
+
+        .sell-form {
+            display: none;
+            margin-top: 15px;
+        }
+
+        #sell-input {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #sell-btn, #edit-btn, #edit-title-btn, #clear-btn {
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #add-btn {
+            padding: 10px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="hangar">
+    <div class="hangar-title" id="hangar-title"><strong>My Aircraft Hangar</strong></div>
+
+    <button id="edit-title-btn" onclick="editHangarTitle()">Edit Hangar Title</button>
+
+    <form id="sell-form" class="sell-form">
+        <input type="number" id="sell-input" placeholder="Enter Price">
+        <button id="sell-btn" onclick="sellAircraft()">Sell</button>
+    </form>
+
+    <!-- Add your own aircraft button -->
+    <button id="add-btn" onclick="addAircraft()">Add Aircraft</button>
+
+    <!-- Clear all aircrafts button -->
+    <button id="clear-btn" onclick="clearAircrafts()">Clear All Aircrafts</button>
+</div>
+
+<script>
+    let aircraftCount = 0;
+    const maxAircrafts = 5;
+    const hangarTitleElement = document.getElementById('hangar-title');
+    const hangar = document.getElementById('hangar');
+
+    const savedHangarData = JSON.parse(localStorage.getItem('hangarData')) || {};
+    hangarTitleElement.innerText = savedHangarData.hangarTitle || 'My Aircraft Hangar';
+
+    for (const aircraftData of savedHangarData.aircrafts || []) {
+        createAircraftElement(aircraftData);
+    }
+
+    function showSellForm(aircraftId) {
+        // ... Your existing code ...
+    }
+
+    function sellAircraft(aircraftId) {
+        // ... Your existing code ...
+        saveHangarData();
+    }
+
+    function addAircraft() {
+        if (aircraftCount >= maxAircrafts) {
+            alert("You cannot exceed more than 5 aircrafts. Please sell or clear some aircrafts.");
+            return;
+        }
+
+        const aircraftName = prompt('Enter the name of your aircraft:');
+        if (!aircraftName || aircraftName.trim() === '') {
+            return; // Cancelled or empty name
+        }
+
+        aircraftCount++;
+        createAircraftElement({ id: `aircraft${aircraftCount}`, name: aircraftName });
+        saveHangarData();
+    }
+
+    function clearAircrafts() {
+        const confirmClear = confirm("Are you sure you want to clear all aircrafts?");
+        if (confirmClear) {
+            hangar.innerHTML = '';
+            aircraftCount = 0;
+            saveHangarData();
+        }
+    }
+
+    function createAircraftElement(aircraftData) {
+        const newAircraft = document.createElement('div');
+        newAircraft.className = 'aircraft';
+        newAircraft.id = aircraftData.id;
+        newAircraft.innerHTML = `
+            <span style="font-weight: bold;">${aircraftData.name}</span>
+            <button id="edit-btn" onclick="editAircraft('${aircraftData.id}')">Edit</button>
+            <button style="background-color: #e74c3c; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;" onclick="showSellForm('${aircraftData.id}')">Sell</button>
+        `;
+
+        hangar.appendChild(newAircraft);
+    }
+
+    function editAircraft(aircraftId) {
+        // ... Your existing code ...
+        saveHangarData();
+    }
+
+    function editHangarTitle() {
+        const newTitle = prompt('Enter the new title for your hangar:');
+        if (!newTitle || newTitle.trim() === '') {
+            return; // Cancelled or empty title
+        }
+
+        hangarTitleElement.innerText = newTitle;
+        saveHangarData();
+    }
+
+    function saveHangarData() {
+        const hangarData = {
+            hangarTitle: hangarTitleElement.innerText,
+            aircrafts: Array.from(hangar.children).map(aircraftElement => {
+                return {
+                    id: aircraftElement.id,
+                    name: aircraftElement.querySelector('span').innerText,
+                };
+            }),
+        };
+
+        localStorage.setItem('hangarData', JSON.stringify(hangarData));
+    }
+</script>
+
+</body>
+</html>
+
