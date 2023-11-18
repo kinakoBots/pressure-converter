@@ -114,7 +114,26 @@
     }
 
     function showSellForm(aircraftId) {
-        // ... Your existing code ...
+       let aircraftCount = 0; // Initial count of aircraft
+
+    function showSellForm(aircraftId) {
+        const sellForm = document.querySelector('.sell-form');
+        sellForm.style.display = 'flex';
+
+        const sellBtn = document.getElementById('sell-btn');
+        sellBtn.onclick = function() {
+            sellAircraft(aircraftId);
+        };
+    }
+
+    function sellAircraft(aircraftId) {
+        const aircraftElement = document.getElementById(aircraftId);
+        aircraftElement.parentNode.removeChild(aircraftElement);
+
+        // Hide sell form after selling
+        const sellForm = document.querySelector('.sell-form');
+        sellForm.style.display = 'none';
+    }
     }
 
     function sellAircraft(aircraftId) {
