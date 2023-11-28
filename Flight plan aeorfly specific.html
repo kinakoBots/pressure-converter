@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Planner</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Flight Planner</h1>
+
+    <form id="flightForm">
+        <label for="callsign">Callsign:</label>
+        <input type="text" id="callsign" name="callsign" required>
+
+        <h2>Flight Rules</h2>
+        <label for="flightRules">Flight Rules:</label>
+        <select id="flightRules" name="flightRules" required>
+            <option value="VFR">VFR</option>
+            <option value="IFR">IFR</option>
+        </select>
+
+        <label for="aircraftType">Aircraft Type (ICAO):</label>
+        <input type="text" id="aircraftType" name="aircraftType" required>
+
+        <label for="wakeCategory">Wake Category:</label>
+        <input type="text" id="wakeCategory" name="wakeCategory" required>
+
+        <label for="equipment">Equipment (ICAO/FAA):</label>
+        <input type="text" id="equipment" name="equipment" required>
+
+        <label for="transponder">Transponder:</label>
+        <input type="text" id="transponder" name="transponder" required>
+
+        <label for="departure">Departure:</label>
+        <input type="text" id="departure" name="departure" required>
+
+        <label for="offBlockUTC">Off-Block UTC (HHMM):</label>
+        <input type="text" id="offBlockUTC" name="offBlockUTC" required>
+
+        <label for="altitude">Altitude:</label>
+        <input type="text" id="altitude" name="altitude" required>
+
+        <label for="airspeed">Airspeed (knots):</label>
+        <input type="text" id="airspeed" name="airspeed" required>
+
+        <label for="arrival">Arrival:</label>
+        <input type="text" id="arrival" name="arrival" required>
+
+        <label for="alternate">Alternate:</label>
+        <input type="text" id="alternate" name="alternate" required>
+
+        <label for="enrouteTime">Enroute Time (HHMM):</label>
+        <input type="text" id="enrouteTime" name="enrouteTime" required>
+
+        <label for="fuelEndurance">Fuel Endurance (HHMM):</label>
+        <input type="text" id="fuelEndurance" name="fuelEndurance" required>
+
+        <label for="route">Route:</label>
+        <textarea id="route" name="route" rows="4" cols="50" required></textarea>
+
+        <button type="button" onclick="submitFlightPlan()">Submit</button>
+    </form>
+
+    <script>
+        function submitFlightPlan() {
+            var formData = {
+                callsign: document.getElementById('callsign').value,
+                flightRules: document.getElementById('flightRules').value,
+                aircraftType: document.getElementById('aircraftType').value,
+                wakeCategory: document.getElementById('wakeCategory').value,
+                equipment: document.getElementById('equipment').value,
+                transponder: document.getElementById('transponder').value,
+                departure: document.getElementById('departure').value,
+                offBlockUTC: document.getElementById('offBlockUTC').value,
+                altitude: document.getElementById('altitude').value,
+                airspeed: document.getElementById('airspeed').value,
+                arrival: document.getElementById('arrival').value,
+                alternate: document.getElementById('alternate').value,
+                enrouteTime: document.getElementById('enrouteTime').value,
+                fuelEndurance: document.getElementById('fuelEndurance').value,
+                route: document.getElementById('route').value,
+            };
+
+            var discordWebhookURL = 'https://discord.com/api/webhooks/1179118060813176882/Jl8AvLGgZH6rfMPbdqhDsOO9FDRnWErizVabc9hCivkdjZ5JDAuvmyuG2eBsm3nFxXJ5';
+
+            var message = `
+                **Flight Plan Submission**
+                \`\`\`
+                Callsign: ${formData.callsign}
+                Flight Rules: ${formData.flightRules}
+                Aircraft Type (ICAO): ${formData.aircraftType}
+                Wake Category: ${formData.wakeCategory}
+                Equipment (ICAO/FAA): ${formData.equipment}
+                Transponder: ${formData.transponder}
+                Departure: ${formData.departure}
+                Off-Block UTC (HHMM): ${formData.offBlockUTC}
+                Altitude: ${formData.altitude}
+                Airspeed (knots): ${formData.airspeed}
+                Arrival: ${formData.arrival}
+                Alternate: ${formData.alternate}
+                Enroute Time (HHMM): ${formData.enrouteTime}
+                Fuel Endurance (HHMM): ${formData.fuelEndurance}
+                Route: ${formData.route}
+                \`\`\`
+                _Submitted via Flight Planner Form_
+            `;
+
+            fetch(discordWebhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: message }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error sending message to Discord');
+                }
+                alert('Flight plan submitted successfully!');
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Error submitting flight plan. Please try again.');
+            });
+        }
+    </script>
+<div>
+</div>
+ <h2> SECTION 2 COMING SOON </h2>
+
+</body>
+</html>
