@@ -12,8 +12,8 @@
         }
         canvas {
             display: block;
-            margin: auto;
-            border: 1px solid black;
+            width: 100%;
+            height: 100vh;
             cursor: crosshair;
         }
         .search-bar {
@@ -24,7 +24,7 @@
     </style>
 </head>
 <body>
-    <canvas id="whiteboard" width="800" height="600"></canvas>
+    <canvas id="whiteboard"></canvas>
 
     <div class="search-bar">
         <input type="text" id="search-input" placeholder="Type commands here...">
@@ -44,8 +44,8 @@
                 const x = e.touches ? e.touches[0].pageX - canvas.offsetLeft : e.offsetX;
                 const y = e.touches ? e.touches[0].pageY - canvas.offsetTop : e.offsetY;
                 context.strokeStyle = color;
-                context.lineCap = 'round';
-                context.lineJoin = 'round';
+                context.lineCap = 'round'; // Smooth marker
+                context.lineJoin = 'round'; // Smooth marker
                 context.lineWidth = 5;
                 context.beginPath();
                 context.moveTo(lastX, lastY);
@@ -71,6 +71,8 @@
                         document.body.style.backgroundColor = 'black';
                     } else if (args[0] === '!CL' && args[1] === 'white') {
                         color = 'white';
+                    } else if (args[0] === '!erase') {
+                        context.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
                     }
                 }
             }
