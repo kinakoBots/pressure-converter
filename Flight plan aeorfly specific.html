@@ -8,6 +8,7 @@
         body {
             margin: 0;
             padding: 0;
+            overflow: hidden; /* Prevent scrolling */
         }
         canvas {
             display: block;
@@ -15,10 +16,19 @@
             border: 1px solid black;
             cursor: crosshair;
         }
+        .search-bar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
     </style>
 </head>
 <body>
     <canvas id="whiteboard" width="800" height="600"></canvas>
+
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Type commands here...">
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -45,6 +55,7 @@
             }
 
             function startDrawing(e) {
+                e.preventDefault(); // Prevent scrolling on mobile devices
                 isDrawing = true;
                 [lastX, lastY] = [e.touches ? e.touches[0].pageX - canvas.offsetLeft : e.offsetX, e.touches ? e.touches[0].pageY - canvas.offsetTop : e.offsetY];
             }
@@ -52,6 +63,25 @@
             function stopDrawing() {
                 isDrawing = false;
             }
+
+            function handleCommand(command) {
+                const args = command.split(' ');
+                if (args.length >= 2) {
+                    if (args[0] === '!background' && args[1] === 'black') {
+                        document.body.style.backgroundColor = 'black';
+                    } else if (args[0] === '!CL' && args[1] === 'white') {
+                        color = 'white';
+                    }
+                }
+            }
+
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    handleCommand(searchInput.value.trim());
+                    searchInput.value = ''; // Clear input after processing command
+                }
+            });
 
             canvas.addEventListener('mousedown', startDrawing);
             canvas.addEventListener('mousemove', draw);
