@@ -3,51 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIRAC Notifier</title>
+    <title>Interactive Whiteboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
         }
-        h1 {
+        canvas {
+            display: block;
+            margin: auto;
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+        #color-selector {
             text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
+        .color-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 10px;
+            cursor: pointer;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <h1>AIRAC Notifier</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Cycle</th>
-                <th>RAD Cut-Off</th>
-                <th>RAD Publication</th>
-                <th>AIRAC</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Insert AIRAC information here -->
-            <tr>
-                <td>2401</td>
-                <td>30 NOV 23</td>
-                <td>22 DEC 23</td>
-                <td>25 JAN 24</td>
-            </tr>
-            <!-- Add more rows for additional AIRAC data -->
-        </tbody>
-    </table>
+    <canvas id="whiteboard" width="800" height="600"></canvas>
+    <div id="color-selector">
+        <div class="color-button" id="black"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('whiteboard');
+            const context = canvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let color = 'black'; // Default color
+
+            function draw(e) {
+                if (!isDrawing) return;
+                context.strokeStyle = color;
+                context.lineCap = 'round';
+                context.lineJoin = 'round';
+                context.lineWidth = 5;
+                context.beginPath();
+                context.moveTo(lastX, lastY);
+                context.lineTo(e.offsetX, e.offsetY);
+                context.stroke();
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            });
+
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseout', () => isDrawing = false);
+
+            // Color selector
+            const blackButton = document.getElementById('black');
+            blackButton.style.backgroundColor = 'black';
+            blackButton.addEventListener('click', () => {
+                color = 'black';
+            });
+        });
+    </script>
 </body>
 </html>
