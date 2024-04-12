@@ -3,63 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Quiz</title>
+  <title>ChatGPT Search Interface</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
     }
-    .question {
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 20px;
+    }
+    .search-input {
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      width: 70%;
+      font-size: 16px;
+      outline: none;
+    }
+    .search-button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    .search-button:hover {
+      background-color: #0056b3;
+    }
+    .chat-container {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      height: 300px;
+      overflow-y: scroll;
+    }
+    .user-message {
+      margin-bottom: 10px;
+      text-align: right;
+      color: #007bff;
+    }
+    .bot-message {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Random Quiz</h1>
-  <div id="quiz"></div>
+  <div class="container">
+    <h1>ChatGPT Search</h1>
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Enter your search query...">
+      <button class="search-button">Search</button>
+    </div>
+    <div class="chat-container" id="chat-container"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    const questions = [
-      { question: "What is the capital of France?", answer: "Paris" },
-      { question: "Who wrote 'To Kill a Mockingbird'?", answer: "Harper Lee" },
-      { question: "What is the chemical symbol for water?", answer: "H2O" },
-      { question: "Which planet is known as the Red Planet?", answer: "Mars" },
-      { question: "What is the tallest mammal?", answer: "Giraffe" },
-      { question: "What is the powerhouse of the cell?", answer: "Mitochondria" },
-      { question: "Who painted the Mona Lisa?", answer: "Leonardo da Vinci" },
-      { question: "What is the currency of Japan?", answer: "Yen" },
-      { question: "How many continents are there?", answer: "7" },
-      { question: "What is the tallest mountain in the world?", answer: "Mount Everest" }
-    ];
-
-    let currentQuestion = 0;
-
-    function loadQuestion() {
-      const quizContainer = document.getElementById('quiz');
-      quizContainer.innerHTML = '';
-      
-      const question = questions[currentQuestion].question;
-      const answer = questions[currentQuestion].answer;
-
-      const userInput = prompt(question);
-      const feedback = document.createElement('p');
-
-      if (userInput.toLowerCase() === answer.toLowerCase()) {
-        feedback.textContent = "Correct!";
-      } else {
-        feedback.textContent = `Incorrect! The correct answer is: ${answer}`;
-      }
-
-      quizContainer.appendChild(feedback);
-
-      currentQuestion++;
-
-      if (currentQuestion < questions.length) {
-        setTimeout(loadQuestion, 1000); // Load next question after 1 second
-      } else {
-        quizContainer.innerHTML += '<p>Quiz complete!</p>';
-      }
+    // Function to send a message to ChatGPT and display the response
+    function sendMessage(message) {
+      $('#chat-container').append('<div class="user-message">' + message + '</div>');
+      $.ajax({
+        url: 'https://api.openai.com/v1/engines/text-davinci-003/completions',
+        headers: {
+          'Authorization': 'Bearer YOUR_API_KEY'
+        },
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          prompt: message,
+          max_tokens: 50
+        }),
+        success: function(data) {
+          $('#chat-container').append('<div class="bot-message">' + data.choices[0].text.trim() + '</div>');
+          $('#chat-container').animate({ scrollTop: $('#chat-container').prop("scrollHeight")}, 1000);
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+        }
+      });
     }
 
-    loadQuestion();
+    // Function to handle user input
+    $('.search-button').on('click', function() {
+      var message = $('.search-input').val();
+      if (message.trim() !== '') {
+        sendMessage(message);
+        $('.search-input').val('');
+      }
+    });
+
+    // Pressing enter in the input field will also send the message
+    $('.search-input').on('keypress', function(event) {
+      if (event.which === 13) {
+        var message = $('.search-input').val();
+        if (message.trim() !== '') {
+          sendMessage(message);
+          $('.search-input').val('');
+        }
+      }
+    });
   </script>
 </body>
 </html>
