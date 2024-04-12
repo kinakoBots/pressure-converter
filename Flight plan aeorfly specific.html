@@ -81,8 +81,8 @@
   <div class="container">
     <h1>ChatGPT Search</h1>
     <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Enter your search query...">
-      <button class="search-button">Search</button>
+      <input type="text" class="search-input" placeholder="Enter your message...">
+      <button class="search-button">Send</button>
     </div>
     <div class="chat-container" id="chat-container"></div>
   </div>
@@ -93,13 +93,14 @@
     function sendMessage(message) {
       $('#chat-container').append('<div class="user-message">' + message + '</div>');
       $.ajax({
-        url: 'https://api.openai.com/v1/engines/text-davinci-003/completions',
+        url: 'https://api.openai.com/v1/completions',
         headers: {
           'Authorization': 'Bearer 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'
         },
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
+          model: 'text-davinci-003',
           prompt: message,
           max_tokens: 50
         }),
