@@ -58,13 +58,22 @@
       height: 300px;
       overflow-y: scroll;
     }
-    .user-message {
+    .user-message, .bot-message {
+      max-width: 70%;
+      padding: 10px;
+      border-radius: 5px;
       margin-bottom: 10px;
+    }
+    .user-message {
+      background-color: #007bff;
+      color: #fff;
+      align-self: flex-end;
       text-align: right;
-      color: #007bff;
     }
     .bot-message {
-      margin-bottom: 10px;
+      background-color: #eee;
+      color: #333;
+      align-self: flex-start;
     }
   </style>
 </head>
@@ -86,7 +95,7 @@
       $.ajax({
         url: 'https://api.openai.com/v1/engines/text-davinci-003/completions',
         headers: {
-          'Authorization': 'Bearer 'sk-pFDfvzr1ma7ibUZvQDGTT3BlbkFJuGOw7dZA39UwhYY25ahgk'
+          'Authorization': 'Bearer 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'
         },
         method: 'POST',
         contentType: 'application/json',
