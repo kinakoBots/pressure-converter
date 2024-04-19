@@ -56,12 +56,9 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
-        .prop-control-buttons {
-            display: flex;
-            justify-content: center;
-        }
-        .prop-control-buttons button {
-            margin: 0 10px;
+        .prop-control-slider {
+            width: 200px;
+            margin: auto;
         }
     </style>
 </head>
@@ -69,50 +66,24 @@
     <div class="container">
         <div class="prop-control">
             <div class="prop-control-label">Propeller Control</div>
-            <div class="prop-control-buttons">
-                <button onclick="movePropeller('up')">Move Up</button>
-                <button onclick="movePropeller('down')">Move Down</button>
-            </div>
+            <input type="range" class="prop-control-slider" id="propSlider" min="0" max="2700" value="0" onchange="setRPM()">
+            <div id="rpmDisplay">0 RPM</div>
         </div>
         <div class="propeller">
             <div class="propeller-blade blade1"></div>
             <div class="propeller-blade blade2"></div>
             <div class="propeller-blade blade3"></div>
         </div>
-        <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
-        <button onclick="setRPM()">Set</button>
     </div>
 
     <script>
-        var feathered = false;
-
         function setRPM() {
-            var rpmInput = document.getElementById('rpmInput').value;
+            var rpmInput = document.getElementById('propSlider').value;
             var propellerBlades = document.querySelectorAll('.propeller-blade');
-            if (rpmInput >= 0 && rpmInput <= 2700) {
-                var rotation = 'rotate(' + rpmInput + 'deg)';
-                propellerBlades.forEach(function(blade) {
-                    blade.style.animationDuration = (60 / rpmInput) + 's';
-                });
-            } else {
-                alert('Please enter a valid RPM (0-2700).');
-            }
-        }
-
-        function movePropeller(direction) {
-            var propellerBlades = document.querySelectorAll('.propeller-blade');
-            var rotationAmount = 10; // Adjust as needed
-            if (direction === 'up') {
-                propellerBlades.forEach(function(blade) {
-                    var currentRotation = parseInt(blade.style.transform.substring(7));
-                    blade.style.transform = 'rotateZ(' + (currentRotation + rotationAmount) + 'deg)';
-                });
-            } else if (direction === 'down') {
-                propellerBlades.forEach(function(blade) {
-                    var currentRotation = parseInt(blade.style.transform.substring(7));
-                    blade.style.transform = 'rotateZ(' + (currentRotation - rotationAmount) + 'deg)';
-                });
-            }
+            document.getElementById('rpmDisplay').textContent = rpmInput + ' RPM';
+            propellerBlades.forEach(function(blade) {
+                blade.style.animationDuration = (60 / rpmInput) + 's';
+            });
         }
     </script>
 </body>
