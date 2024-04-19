@@ -51,10 +51,29 @@
         .prop-control {
             margin-top: 20px;
         }
+        .prop-control-label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .prop-control-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .prop-control-buttons button {
+            margin: 0 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="prop-control">
+            <div class="prop-control-label">Propeller Control</div>
+            <div class="prop-control-buttons">
+                <button onclick="movePropeller('up')">Move Up</button>
+                <button onclick="movePropeller('down')">Move Down</button>
+            </div>
+        </div>
         <div class="propeller">
             <div class="propeller-blade blade1"></div>
             <div class="propeller-blade blade2"></div>
@@ -62,10 +81,6 @@
         </div>
         <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
         <button onclick="setRPM()">Set</button>
-        <div class="prop-control">
-            <button onclick="movePropeller('up')">Move Up</button>
-            <button onclick="movePropeller('down')">Move Down</button>
-        </div>
     </div>
 
     <script>
@@ -89,15 +104,13 @@
             var rotationAmount = 10; // Adjust as needed
             if (direction === 'up') {
                 propellerBlades.forEach(function(blade) {
-                    var currentRotation = blade.style.transform;
-                    var newRotation = 'rotateZ(' + (parseInt(currentRotation.substring(7)) + rotationAmount) + 'deg)';
-                    blade.style.transform = newRotation;
+                    var currentRotation = parseInt(blade.style.transform.substring(7));
+                    blade.style.transform = 'rotateZ(' + (currentRotation + rotationAmount) + 'deg)';
                 });
             } else if (direction === 'down') {
                 propellerBlades.forEach(function(blade) {
-                    var currentRotation = blade.style.transform;
-                    var newRotation = 'rotateZ(' + (parseInt(currentRotation.substring(7)) - rotationAmount) + 'deg)';
-                    blade.style.transform = newRotation;
+                    var currentRotation = parseInt(blade.style.transform.substring(7));
+                    blade.style.transform = 'rotateZ(' + (currentRotation - rotationAmount) + 'deg)';
                 });
             }
         }
