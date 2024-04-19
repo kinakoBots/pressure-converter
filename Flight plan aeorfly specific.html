@@ -1,138 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatGPT Search Interface</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .search-bar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .search-input {
-      padding: 10px;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-      width: 70%;
-      font-size: 16px;
-      outline: none;
-    }
-    .search-button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-    }
-    .search-button:hover {
-      background-color: #0056b3;
-    }
-    .chat-container {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #f9f9f9;
-      border-radius: 5px;
-      height: 300px;
-      overflow-y: scroll;
-    }
-    .user-message, .bot-message {
-      max-width: 70%;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-    }
-    .user-message {
-      background-color: #007bff;
-      color: #fff;
-      align-self: flex-end;
-      text-align: right;
-    }
-    .bot-message {
-      background-color: #eee;
-      color: #333;
-      align-self: flex-start;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propeller RPM Control</title>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .propeller {
+            width: 200px;
+            height: 200px;
+            background-color: #3498db;
+            border-radius: 50%;
+            display: inline-block;
+            transition: transform 0.5s ease-in-out;
+        }
+        .rpm-input {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>ChatGPT Search</h1>
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Enter your message...">
-      <button class="search-button">Send</button>
+    <div class="container">
+        <div class="propeller"></div>
+        <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
+        <button onclick="setRPM()">Set</button>
     </div>
-    <div class="chat-container" id="chat-container"></div>
-  </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    // Function to send a message to ChatGPT and display the response
-    function sendMessage(message) {
-      $('#chat-container').append('<div class="user-message">' + message + '</div>');
-      $.ajax({
-        url: 'https://api.openai.com/v1/completions',
-        headers: {
-          'Authorization': 'Bearer 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'
-        },
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          model: 'text-davinci-003',
-          prompt: message,
-          max_tokens: 50
-        }),
-        success: function(data) {
-          $('#chat-container').append('<div class="bot-message">' + data.choices[0].text.trim() + '</div>');
-          $('#chat-container').animate({ scrollTop: $('#chat-container').prop("scrollHeight")}, 1000);
-        },
-        error: function(xhr, status, error) {
-          console.error('Error:', error);
+    <script>
+        function setRPM() {
+            var rpmInput = document.getElementById('rpmInput').value;
+            var propeller = document.querySelector('.propeller');
+            if (rpmInput > 0) {
+                if (rpmInput <= 10000) {
+                    var rotation = 'rotate(' + rpmInput + 'deg)';
+                    propeller.style.transform = rotation;
+                } else {
+                    propeller.style.background = 'url(https://media.giphy.com/media/4bAWBFWV54j8w/giphy.gif) center/cover no-repeat';
+                    setTimeout(function() {
+                        propeller.style.background = '#3498db';
+                    }, 3000); // Reset propeller after 3 seconds
+                }
+            } else {
+                alert('Please enter a valid RPM.');
+            }
         }
-      });
-    }
-
-    // Function to handle user input
-    $('.search-button').on('click', function() {
-      var message = $('.search-input').val();
-      if (message.trim() !== '') {
-        sendMessage(message);
-        $('.search-input').val('');
-      }
-    });
-
-    // Pressing enter in the input field will also send the message
-    $('.search-input').on('keypress', function(event) {
-      if (event.which === 13) {
-        var message = $('.search-input').val();
-        if (message.trim() !== '') {
-          sendMessage(message);
-          $('.search-input').val('');
-        }
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>
