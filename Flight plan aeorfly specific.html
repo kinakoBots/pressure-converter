@@ -18,25 +18,27 @@
         }
         .propeller-blade {
             width: 10px;
-            height: 180px;
+            height: 200px;
             background-color: #f1c40f;
             position: absolute;
             top: 50%;
             left: 50%;
             transform-origin: bottom center;
+            animation: spin 1s linear infinite;
         }
         .blade1 {
-            transform: rotateZ(-30deg) translateX(-50%);
+            transform: rotateZ(-30deg);
         }
         .blade2 {
-            transform: rotateZ(150deg) translateX(-50%);
+            transform: rotateZ(150deg);
         }
         .blade3 {
-            transform: rotateZ(330deg) translateX(-50%);
+            transform: rotateZ(330deg);
         }
-        .blade {
-            border-top-right-radius: 50px;
-            border-bottom-right-radius: 50px;
+        @keyframes spin {
+            to {
+                transform: rotateZ(360deg);
+            }
         }
         .rpm-input {
             margin-top: 20px;
@@ -90,28 +92,4 @@
             if (rpmInput >= 0 && rpmInput <= 10000) {
                 var rotation = 'rotate(' + rpmInput + 'deg)';
                 propellerBlades.forEach(function(blade) {
-                    blade.style.animationDuration = (60 / rpmInput) + 's';
-                });
-            } else {
-                alert('Please enter a valid RPM.');
-            }
-        }
-
-        function movePropeller(direction) {
-            var propellerBlades = document.querySelectorAll('.propeller-blade');
-            var rotationAmount = 10; // Adjust as needed
-            if (direction === 'up') {
-                propellerBlades.forEach(function(blade) {
-                    var currentRotation = parseFloat(blade.style.transform.substring(7));
-                    blade.style.transform = 'rotateZ(' + (currentRotation + rotationAmount) + 'deg)';
-                });
-            } else if (direction === 'down') {
-                propellerBlades.forEach(function(blade) {
-                    var currentRotation = parseFloat(blade.style.transform.substring(7));
-                    blade.style.transform = 'rotateZ(' + (currentRotation - rotationAmount) + 'deg)';
-                });
-            }
-        }
-    </script>
-</body>
-</html>
+                    blade.style.animation
