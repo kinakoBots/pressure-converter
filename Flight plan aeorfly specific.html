@@ -27,13 +27,13 @@
             animation: spin 1s linear infinite;
         }
         .blade1 {
-            transform: rotateZ(0deg);
+            transform: rotateZ(-30deg);
         }
         .blade2 {
-            transform: rotateZ(120deg);
+            transform: rotateZ(150deg);
         }
         .blade3 {
-            transform: rotateZ(240deg);
+            transform: rotateZ(330deg);
         }
         @keyframes spin {
             to {
@@ -48,6 +48,9 @@
         .controls {
             margin-top: 20px;
         }
+        .prop-control {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -57,34 +60,42 @@
             <div class="propeller-blade blade2"></div>
             <div class="propeller-blade blade3"></div>
         </div>
-        <div class="controls">
-            <button onclick="increaseRPM()">Increase RPM</button>
-            <button onclick="decreaseRPM()">Decrease RPM</button>
+        <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
+        <button onclick="setRPM()">Set</button>
+        <div class="prop-control">
+            <button onclick="featherProp()">Feather Propeller</button>
         </div>
     </div>
 
     <script>
-        var currentRPM = 0;
+        var feathered = false;
 
-        function setRPM(rpm) {
+        function setRPM() {
+            var rpmInput = document.getElementById('rpmInput').value;
             var propellerBlades = document.querySelectorAll('.propeller-blade');
-            if (rpm >= 0 && rpm <= 10000) {
-                var rotation = 'rotate(' + rpm + 'deg)';
+            if (rpmInput >= 0 && rpmInput <= 10000) {
+                var rotation = 'rotate(' + rpmInput + 'deg)';
                 propellerBlades.forEach(function(blade) {
-                    blade.style.animationDuration = (60 / rpm) + 's';
+                    blade.style.animationDuration = (60 / rpmInput) + 's';
                 });
-                currentRPM = rpm;
+            } else {
+                alert('Please enter a valid RPM.');
             }
         }
 
-        function increaseRPM() {
-            currentRPM += 100;
-            setRPM(currentRPM);
-        }
-
-        function decreaseRPM() {
-            currentRPM -= 100;
-            setRPM(currentRPM);
+        function featherProp() {
+            var propellerBlades = document.querySelectorAll('.propeller-blade');
+            if (!feathered) {
+                propellerBlades.forEach(function(blade) {
+                    blade.style.transform = 'rotateZ(0deg)';
+                });
+                feathered = true;
+            } else {
+                propellerBlades[0].style.transform = 'rotateZ(-30deg)';
+                propellerBlades[1].style.transform = 'rotateZ(150deg)';
+                propellerBlades[2].style.transform = 'rotateZ(330deg)';
+                feathered = false;
+            }
         }
     </script>
 </body>
