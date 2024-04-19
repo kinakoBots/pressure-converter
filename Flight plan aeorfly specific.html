@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Aircraft Controls</title>
     <style>
         .container {
             text-align: center;
@@ -40,34 +40,39 @@
                 transform: rotateZ(360deg);
             }
         }
-        .rpm-input {
-            margin-top: 20px;
-            font-size: 18px;
-            padding: 5px;
+        .control {
+            margin: 20px;
         }
-        .controls {
-            margin-top: 20px;
-        }
-        .prop-control {
-            margin-top: 20px;
-        }
-        .prop-control-label {
+        .control-label {
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 10px;
         }
-        .prop-control-slider {
+        .control-slider {
             width: 200px;
             margin: auto;
+        }
+        .start-button {
+            display: none;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="prop-control">
-            <div class="prop-control-label">RPM</div> <!-- Fixed missing closing tag here -->
-            <input type="range" class="prop-control-slider" id="propSlider" min="0" max="2700" value="0" onchange="setRPM()">
-            <div id="rpmDisplay">0 RPM</div>
+        <div class="controls">
+            <div class="control">
+                <div class="control-label">RPM</div>
+                <input type="range" class="control-slider" id="propSlider" min="0" max="2700" value="0" onchange="setRPM()">
+                <div id="rpmDisplay">0 RPM</div>
+            </div>
+            <div class="control">
+                <div class="control-label">Mixture</div>
+                <input type="range" class="control-slider" id="mixtureSlider" min="0" max="100" value="0" onchange="adjustMixture()">
+            </div>
+            <div class="control">
+                <button class="start-button" onclick="startEngine()">Start Engine</button>
+            </div>
         </div>
         <div class="propeller">
             <div class="propeller-blade blade1"></div>
@@ -77,6 +82,8 @@
     </div>
 
     <script>
+        var engineRunning = false;
+
         function setRPM() {
             var rpmInput = document.getElementById('propSlider').value;
             var propellerBlades = document.querySelectorAll('.propeller-blade');
@@ -84,6 +91,26 @@
             propellerBlades.forEach(function(blade) {
                 blade.style.animationDuration = (60 / rpmInput) + 's';
             });
+        }
+
+        function adjustMixture() {
+            var mixtureValue = document.getElementById('mixtureSlider').value;
+            if (mixtureValue == 0) {
+                engineRunning = false;
+                document.querySelector('.start-button').style.display = 'none';
+            } else {
+                engineRunning = true;
+                document.querySelector('.start-button').style.display = 'block';
+            }
+        }
+
+        function startEngine() {
+            if (engineRunning) {
+                alert('Engine started!');
+                // Add code to start the engine here
+            } else {
+                alert('Adjust mixture to start the engine.');
+            }
         }
     </script>
 </body>
