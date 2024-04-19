@@ -89,7 +89,31 @@
         function setRPM() {
             var rpmInput = document.getElementById('rpmInput').value;
             var propellerBlades = document.querySelectorAll('.propeller-blade');
-            if (rpmInput >= 0 && rpmInput <= 10000) {
+            if (rpmInput >= 0 && rpmInput <= 2700) {
                 var rotation = 'rotate(' + rpmInput + 'deg)';
                 propellerBlades.forEach(function(blade) {
-                    blade.style.animation
+                    blade.style.animationDuration = (60 / rpmInput) + 's';
+                });
+            } else {
+                alert('Please enter a valid RPM (0-2700).');
+            }
+        }
+
+        function movePropeller(direction) {
+            var propellerBlades = document.querySelectorAll('.propeller-blade');
+            var rotationAmount = 10; // Adjust as needed
+            if (direction === 'up') {
+                propellerBlades.forEach(function(blade) {
+                    var currentRotation = parseInt(blade.style.transform.substring(7));
+                    blade.style.transform = 'rotateZ(' + (currentRotation + rotationAmount) + 'deg)';
+                });
+            } else if (direction === 'down') {
+                propellerBlades.forEach(function(blade) {
+                    var currentRotation = parseInt(blade.style.transform.substring(7));
+                    blade.style.transform = 'rotateZ(' + (currentRotation - rotationAmount) + 'deg)';
+                });
+            }
+        }
+    </script>
+</body>
+</html>
