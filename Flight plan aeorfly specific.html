@@ -63,7 +63,8 @@
         <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
         <button onclick="setRPM()">Set</button>
         <div class="prop-control">
-            <button onclick="featherProp()">Feather Propeller</button>
+            <button onclick="movePropeller('up')">Move Up</button>
+            <button onclick="movePropeller('down')">Move Down</button>
         </div>
     </div>
 
@@ -83,18 +84,21 @@
             }
         }
 
-        function featherProp() {
+        function movePropeller(direction) {
             var propellerBlades = document.querySelectorAll('.propeller-blade');
-            if (!feathered) {
+            var rotationAmount = 10; // Adjust as needed
+            if (direction === 'up') {
                 propellerBlades.forEach(function(blade) {
-                    blade.style.transform = 'rotateZ(0deg)';
+                    var currentRotation = blade.style.transform;
+                    var newRotation = 'rotateZ(' + (parseInt(currentRotation.substring(7)) + rotationAmount) + 'deg)';
+                    blade.style.transform = newRotation;
                 });
-                feathered = true;
-            } else {
-                propellerBlades[0].style.transform = 'rotateZ(-30deg)';
-                propellerBlades[1].style.transform = 'rotateZ(150deg)';
-                propellerBlades[2].style.transform = 'rotateZ(330deg)';
-                feathered = false;
+            } else if (direction === 'down') {
+                propellerBlades.forEach(function(blade) {
+                    var currentRotation = blade.style.transform;
+                    var newRotation = 'rotateZ(' + (parseInt(currentRotation.substring(7)) - rotationAmount) + 'deg)';
+                    blade.style.transform = newRotation;
+                });
             }
         }
     </script>
