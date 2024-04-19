@@ -13,9 +13,24 @@
             width: 200px;
             height: 200px;
             background-color: #3498db;
-            border-radius: 50%;
+            position: relative;
             display: inline-block;
-            transition: transform 0.5s ease-in-out;
+            overflow: hidden;
+        }
+        .propeller-blade {
+            width: 100%;
+            height: 100%;
+            background-color: #f1c40f;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
         .rpm-input {
             margin-top: 20px;
@@ -26,7 +41,11 @@
 </head>
 <body>
     <div class="container">
-        <div class="propeller"></div>
+        <div class="propeller">
+            <div class="propeller-blade"></div>
+            <div class="propeller-blade" style="transform: rotate(120deg);"></div>
+            <div class="propeller-blade" style="transform: rotate(240deg);"></div>
+        </div>
         <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
         <button onclick="setRPM()">Set</button>
     </div>
@@ -34,16 +53,15 @@
     <script>
         function setRPM() {
             var rpmInput = document.getElementById('rpmInput').value;
-            var propeller = document.querySelector('.propeller');
+            var propellerBlades = document.querySelectorAll('.propeller-blade');
             if (rpmInput > 0) {
-                if (rpmInput <= 10000) {
+                if (rpmInput <= 2700) {
                     var rotation = 'rotate(' + rpmInput + 'deg)';
-                    propeller.style.transform = rotation;
+                    propellerBlades.forEach(function(blade) {
+                        blade.style.animationDuration = (60 / rpmInput) + 's';
+                    });
                 } else {
-                    propeller.style.background = 'url(https://media.giphy.com/media/4bAWBFWV54j8w/giphy.gif) center/cover no-repeat';
-                    setTimeout(function() {
-                        propeller.style.background = '#3498db';
-                    }, 3000); // Reset propeller after 3 seconds
+                    alert('RPM is too high!');
                 }
             } else {
                 alert('Please enter a valid RPM.');
