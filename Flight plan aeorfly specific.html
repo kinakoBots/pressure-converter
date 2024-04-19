@@ -10,16 +10,15 @@
             margin-top: 50px;
         }
         .propeller {
-            width: 200px;
-            height: 200px;
-            background-color: #3498db;
+            width: 300px;
+            height: 300px;
             position: relative;
             display: inline-block;
-            overflow: hidden;
+            perspective: 1000px;
         }
         .propeller-blade {
-            width: 100%;
-            height: 100%;
+            width: 10px;
+            height: 200px;
             background-color: #f1c40f;
             position: absolute;
             top: 50%;
@@ -27,9 +26,18 @@
             transform-origin: bottom center;
             animation: spin 1s linear infinite;
         }
+        .blade1 {
+            transform: rotateZ(0deg);
+        }
+        .blade2 {
+            transform: rotateZ(120deg);
+        }
+        .blade3 {
+            transform: rotateZ(240deg);
+        }
         @keyframes spin {
             to {
-                transform: rotate(360deg);
+                transform: rotateZ(360deg);
             }
         }
         .rpm-input {
@@ -37,35 +45,46 @@
             font-size: 18px;
             padding: 5px;
         }
+        .controls {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="propeller">
-            <div class="propeller-blade"></div>
-            <div class="propeller-blade" style="transform: rotate(120deg);"></div>
-            <div class="propeller-blade" style="transform: rotate(240deg);"></div>
+            <div class="propeller-blade blade1"></div>
+            <div class="propeller-blade blade2"></div>
+            <div class="propeller-blade blade3"></div>
         </div>
-        <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
-        <button onclick="setRPM()">Set</button>
+        <div class="controls">
+            <button onclick="increaseRPM()">Increase RPM</button>
+            <button onclick="decreaseRPM()">Decrease RPM</button>
+        </div>
     </div>
 
     <script>
-        function setRPM() {
-            var rpmInput = document.getElementById('rpmInput').value;
+        var currentRPM = 0;
+
+        function setRPM(rpm) {
             var propellerBlades = document.querySelectorAll('.propeller-blade');
-            if (rpmInput > 0) {
-                if (rpmInput <= 2700) {
-                    var rotation = 'rotate(' + rpmInput + 'deg)';
-                    propellerBlades.forEach(function(blade) {
-                        blade.style.animationDuration = (60 / rpmInput) + 's';
-                    });
-                } else {
-                    alert('RPM is too high!');
-                }
-            } else {
-                alert('Please enter a valid RPM.');
+            if (rpm >= 0 && rpm <= 10000) {
+                var rotation = 'rotate(' + rpm + 'deg)';
+                propellerBlades.forEach(function(blade) {
+                    blade.style.animationDuration = (60 / rpm) + 's';
+                });
+                currentRPM = rpm;
             }
+        }
+
+        function increaseRPM() {
+            currentRPM += 100;
+            setRPM(currentRPM);
+        }
+
+        function decreaseRPM() {
+            currentRPM -= 100;
+            setRPM(currentRPM);
         }
     </script>
 </body>
