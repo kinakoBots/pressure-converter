@@ -17,28 +17,26 @@
             perspective: 1000px;
         }
         .propeller-blade {
-            width: 20px;
+            width: 10px;
             height: 180px;
             background-color: #f1c40f;
             position: absolute;
             top: 50%;
             left: 50%;
             transform-origin: bottom center;
-            animation: spin 1s linear infinite;
         }
         .blade1 {
-            transform: rotateZ(-30deg);
+            transform: rotateZ(-30deg) translateX(-50%);
         }
         .blade2 {
-            transform: rotateZ(150deg);
+            transform: rotateZ(150deg) translateX(-50%);
         }
         .blade3 {
-            transform: rotateZ(330deg);
+            transform: rotateZ(330deg) translateX(-50%);
         }
-        @keyframes spin {
-            to {
-                transform: rotateZ(360deg);
-            }
+        .blade {
+            border-top-right-radius: 50px;
+            border-bottom-right-radius: 50px;
         }
         .rpm-input {
             margin-top: 20px;
@@ -75,9 +73,9 @@
             </div>
         </div>
         <div class="propeller">
-            <div class="propeller-blade blade1"></div>
-            <div class="propeller-blade blade2"></div>
-            <div class="propeller-blade blade3"></div>
+            <div class="propeller-blade blade blade1"></div>
+            <div class="propeller-blade blade blade2"></div>
+            <div class="propeller-blade blade blade3"></div>
         </div>
         <input type="number" id="rpmInput" class="rpm-input" placeholder="Set RPM">
         <button onclick="setRPM()">Set</button>
