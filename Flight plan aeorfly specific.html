@@ -3,115 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft Controls</title>
+    <title>Russian Air Force Artificial Horizon Simulation</title>
     <style>
+        /* CSS styles can be added here directly */
         .container {
-            text-align: center;
-            margin-top: 50px;
-        }
-        .propeller {
             width: 300px;
             height: 300px;
+            border: 1px solid black;
             position: relative;
-            display: inline-block;
-            perspective: 1000px;
+            margin: 50px auto;
         }
-        .propeller-blade {
-            width: 10px;
+        .circle {
+            width: 200px;
             height: 200px;
-            background-color: #f1c40f;
+            border-radius: 50%;
             position: absolute;
             top: 50%;
             left: 50%;
-            transform-origin: bottom center;
-            animation: spin 1s linear infinite;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
         }
-        .blade1 {
-            transform: rotateZ(-30deg);
+        .sky {
+            width: 100%;
+            height: 50%;
+            background-color: #87CEEB; /* Light blue color for the sky */
         }
-        .blade2 {
-            transform: rotateZ(150deg);
+        .ground {
+            width: 100%;
+            height: 50%;
+            background-color: #8B4513; /* Brown color for the ground */
         }
-        .blade3 {
-            transform: rotateZ(330deg);
+        .horizon {
+            width: 100%;
+            height: 2px;
+            background-color: black;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
         }
-        @keyframes spin {
-            to {
-                transform: rotateZ(360deg);
-            }
-        }
-        .control {
-            margin: 20px;
-        }
-        .control-label {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .control-slider {
-            width: 200px;
-            margin: auto;
-        }
-        .start-button {
-            display: none;
-            margin-top: 20px;
+        .aircraft {
+            width: 20px;
+            height: 20px;
+            background-color: black; /* Black color for the aircraft */
+            position: absolute;
+            top: calc(50% - 100px); /* Halfway between the center and top */
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="controls">
-            <div class="control">
-                <div class="control-label">RPM</div>
-                <input type="range" class="control-slider" id="propSlider" min="0" max="2700" value="0" onchange="setRPM()">
-                <div id="rpmDisplay">0 RPM</div>
-            </div>
-            <div class="control">
-                <div class="control-label">Mixture</div>
-                <input type="range" class="control-slider" id="mixtureSlider" min="0" max="100" value="0" onchange="adjustMixture()">
-            </div>
-            <div class="control">
-                <button class="start-button" onclick="startEngine()">Start Engine</button>
-            </div>
+        <div class="circle">
+            <div class="sky"></div>
+            <div class="ground"></div>
+            <div class="horizon"></div>
         </div>
-        <div class="propeller">
-            <div class="propeller-blade blade1"></div>
-            <div class="propeller-blade blade2"></div>
-            <div class="propeller-blade blade3"></div>
-        </div>
+        <div class="aircraft"></div>
     </div>
-
-    <script>
-        var engineRunning = false;
-
-        function setRPM() {
-            var rpmInput = document.getElementById('propSlider').value;
-            var propellerBlades = document.querySelectorAll('.propeller-blade');
-            document.getElementById('rpmDisplay').textContent = rpmInput + ' RPM';
-            propellerBlades.forEach(function(blade) {
-                blade.style.animationDuration = (60 / rpmInput) + 's';
-            });
-        }
-
-        function adjustMixture() {
-            var mixtureValue = document.getElementById('mixtureSlider').value;
-            if (mixtureValue == 0) {
-                engineRunning = false;
-                document.querySelector('.start-button').style.display = 'none';
-            } else {
-                engineRunning = true;
-                document.querySelector('.start-button').style.display = 'block';
-            }
-        }
-
-        function startEngine() {
-            if (engineRunning) {
-                alert('Engine started!');
-                // Add code to start the engine here
-            } else {
-                alert('Adjust mixture to start the engine.');
-            }
-        }
-    </script>
 </body>
 </html>
