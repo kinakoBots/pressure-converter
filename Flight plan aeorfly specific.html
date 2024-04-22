@@ -13,55 +13,91 @@
             position: relative;
             margin: 50px auto;
         }
-        .circle {
+        .aircraft {
             width: 200px;
-            height: 200px;
-            border-radius: 50%;
+            height: 100px;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             overflow: hidden;
+            transition: transform 0.5s ease; /* Smooth transition for rotation */
         }
-        .sky {
-            width: 100%;
-            height: 50%;
-            background-color: #87CEEB; /* Light blue color for the sky */
-        }
-        .ground {
-            width: 100%;
-            height: 50%;
-            background-color: #8B4513; /* Brown color for the ground */
-        }
-        .horizon {
-            width: 100%;
-            height: 2px;
-            background-color: black;
+        .wing {
+            width: 50px;
+            height: 100px;
+            background-color: #87CEEB; /* Light blue color for the wings */
             position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
+            top: 0;
         }
-        .aircraft {
-            width: 20px;
-            height: 20px;
-            background-color: black; /* Black color for the aircraft */
+        .fuselage {
+            width: 100px;
+            height: 100px;
+            background-color: #8B4513; /* Brown color for the fuselage */
             position: absolute;
-            top: calc(50% - 100px); /* Halfway between the center and top */
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50px;
+            transition: transform 0.5s ease; /* Smooth transition for rotation */
+        }
+        .cockpit {
+            width: 30px;
+            height: 30px;
+            background-color: black; /* Black color for the cockpit */
+            position: absolute;
+            top: 35px;
             left: 50%;
             transform: translateX(-50%);
             border-radius: 50%;
+        }
+        .controls {
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="circle">
-            <div class="sky"></div>
-            <div class="ground"></div>
-            <div class="horizon"></div>
+        <div class="aircraft" id="aircraft">
+            <div class="wing" style="left: -50px;"></div>
+            <div class="wing" style="right: -50px;"></div>
+            <div class="fuselage">
+                <div class="cockpit"></div>
+            </div>
         </div>
-        <div class="aircraft"></div>
     </div>
+    
+    <div class="controls">
+        <button onclick="turnLeft()">Turn Left</button>
+        <button onclick="turnRight()">Turn Right</button>
+        <div id="degreeCounter">0°</div>
+    </div>
+
+    <script>
+        let degree = 0;
+
+        function turnLeft() {
+            if (degree > -35) {
+                degree -= 5;
+                rotateAircraft();
+            }
+        }
+
+        function turnRight() {
+            if (degree < 35) {
+                degree += 5;
+                rotateAircraft();
+            }
+        }
+
+        function rotateAircraft() {
+            const aircraft = document.getElementById('aircraft');
+            const fuselage = document.querySelector('.fuselage');
+            aircraft.style.transform = `rotate(${degree}deg)`;
+            fuselage.style.transform = `rotate(${-degree}deg)`; // Counter-rotate fuselage
+            document.getElementById('degreeCounter').textContent = `${degree}°`;
+        }
+    </script>
 </body>
 </html>
