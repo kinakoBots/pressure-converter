@@ -2,102 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russian Air Force Artificial Horizon Simulation</title>
+    <title>CM System</title>
     <style>
-        /* CSS styles can be added here directly */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
         .container {
-            width: 300px;
-            height: 300px;
-            border: 1px solid black;
-            position: relative;
-            margin: 50px auto;
-        }
-        .aircraft {
-            width: 200px;
-            height: 100px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            overflow: hidden;
-            transition: transform 0.5s ease; /* Smooth transition for rotation */
-        }
-        .wing {
-            width: 50px;
-            height: 100px;
-            background-color: #87CEEB; /* Light blue color for the wings */
-            position: absolute;
-            top: 0;
-        }
-        .fuselage {
-            width: 100px;
-            height: 100px;
-            background-color: #8B4513; /* Brown color for the fuselage */
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 50px;
-            transition: transform 0.5s ease; /* Smooth transition for rotation */
-        }
-        .cockpit {
-            width: 30px;
-            height: 30px;
-            background-color: black; /* Black color for the cockpit */
-            position: absolute;
-            top: 35px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 50%;
-        }
-        .controls {
-            margin-top: 20px;
             text-align: center;
+            border: 2px solid #61dafb;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            background-color: #20232a;
+        }
+
+        .flare-count {
+            font-size: 48px;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .refill {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .drop {
+            background-color: #f44336;
+            color: white;
+        }
+
+        button:disabled {
+            background-color: #888;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="aircraft" id="aircraft">
-            <div class="wing" style="left: -50px;"></div>
-            <div class="wing" style="right: -50px;"></div>
-            <div class="fuselage">
-                <div class="cockpit"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="controls">
-        <button onclick="turnLeft()">Turn Left</button>
-        <button onclick="turnRight()">Turn Right</button>
-        <div id="degreeCounter">0°</div>
+        <h1>FL</h1>
+        <div class="flare-count" id="flareCount">60</div>
+        <button class="refill" id="refillBtn">Refill FL</button>
+        <button class="drop" id="dropBtn">Drop Flare</button>
     </div>
 
     <script>
-        let degree = 0;
+        let maxFlares = 60;
+        let currentFlares = maxFlares;
 
-        function turnLeft() {
-            if (degree > -35) {
-                degree -= 5;
-                rotateAircraft();
+        const flareCountDisplay = document.getElementById('flareCount');
+        const refillBtn = document.getElementById('refillBtn');
+        const dropBtn = document.getElementById('dropBtn');
+
+        refillBtn.addEventListener('click', () => {
+            currentFlares = maxFlares;
+            updateFlareCount();
+        });
+
+        dropBtn.addEventListener('click', () => {
+            if (currentFlares > 0) {
+                currentFlares--;
+                updateFlareCount();
             }
+        });
+
+        function updateFlareCount() {
+            flareCountDisplay.textContent = currentFlares;
+            dropBtn.disabled = currentFlares === 0;
         }
 
-        function turnRight() {
-            if (degree < 35) {
-                degree += 5;
-                rotateAircraft();
-            }
-        }
-
-        function rotateAircraft() {
-            const aircraft = document.getElementById('aircraft');
-            const fuselage = document.querySelector('.fuselage');
-            aircraft.style.transform = `rotate(${degree}deg)`;
-            fuselage.style.transform = `rotate(${-degree}deg)`; // Counter-rotate fuselage
-            document.getElementById('degreeCounter').textContent = `${degree}°`;
-        }
+        updateFlareCount();
     </script>
 </body>
 </html>
