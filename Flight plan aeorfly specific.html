@@ -25,121 +25,135 @@
             background-color: #333;
             padding: 20px;
             border: 2px solid #666;
-            border-radius: 8px;
+            border-radius: 5px;
             box-shadow: inset 0 0 10px #000, 0 0 10px #00ff00;
             position: relative;
             width: 200px;
-            height: 150px;
+            height: 200px;
         }
 
-        .display {
-            color: #00ff00;
-            font-size: 36px;
-            margin-bottom: 10px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #444;
+        .panel-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            position: relative;
+            width: 100%;
+            height: 100%;
             padding: 5px;
-            width: 80px;
-            background-color: #111;
-            box-shadow: inset 0 0 5px #00ff00;
+            border: 2px solid #444;
+            box-shadow: 0 0 5px #00ff00;
         }
 
         .toggle-switch {
-            width: 40px;
-            height: 20px;
-            border: 2px solid #888;
-            border-radius: 10px;
             position: relative;
+            width: 50px;
+            height: 50px;
             background: #222;
+            border: 2px solid #888;
+            border-radius: 50%;
             cursor: pointer;
-            margin-bottom: 10px;
+            box-shadow: inset 0 0 5px #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 0 5px #888;
+            margin: auto;
         }
 
         .toggle-switch::after {
             content: '';
             position: absolute;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #aaa;
-            transition: 0.3s;
-            left: 3px;
+            width: 20px;
+            height: 30px;
+            background: #999;
+            border: 2px solid #666;
+            border-radius: 3px;
+            transform-origin: bottom;
+            transform: rotate(-45deg);
+            transition: transform 0.3s ease;
         }
 
         .toggle-switch.active::after {
-            left: 22px;
-            background: #0f0;
+            transform: rotate(45deg);
         }
 
         .label {
-            font-size: 12px;
+            font-size: 14px;
             color: white;
-            position: absolute;
-            top: 5px;
-            left: 70px;
+            text-align: center;
+            margin-top: 5px;
         }
 
-        .btn {
-            background-color: #555;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            margin: 5px;
-            font-size: 12px;
-            border-radius: 5px;
+        .display {
+            color: #00ff00;
+            font-size: 36px;
+            text-align: center;
+            border: 2px solid #444;
+            padding: 5px;
+            width: 60px;
+            height: 30px;
+            background-color: #111;
+            box-shadow: inset 0 0 5px #00ff00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
         }
-        
-        .btn:disabled {
-            background-color: #333;
-            color: #777;
-            cursor: not-allowed;
+
+        .border-box {
+            border: 2px solid white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .label-top {
+            position: absolute;
+            top: -15px;
+            font-size: 12px;
+            background: black;
+            padding: 0 2px;
+        }
+
+        .label-right {
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            background: black;
+            padding: 0 2px;
         }
     </style>
 </head>
 <body>
     <div class="panel">
-        <span class="label">FL</span>
-        <div class="display" id="flareCount">60</div>
-        <div class="toggle-switch" id="toggleSwitch"></div>
-        <button class="btn" id="refillBtn">Refill FL</button>
-        <button class="btn" id="dropBtn">Drop Flare</button>
+        <div class="panel-layout">
+            <div class="border-box">
+                <span class="label-top">FL</span>
+                <div class="toggle-switch" id="toggleSwitch"></div>
+                <span class="label">ON</span>
+            </div>
+            <div class="border-box">
+                <div class="display" id="flareCount">60</div>
+                <span class="label-right">ON</span>
+            </div>
+        </div>
     </div>
 
     <script>
         let maxFlares = 60;
         let currentFlares = maxFlares;
         const flareCountDisplay = document.getElementById('flareCount');
-        const refillBtn = document.getElementById('refillBtn');
-        const dropBtn = document.getElementById('dropBtn');
         const toggleSwitch = document.getElementById('toggleSwitch');
 
         toggleSwitch.addEventListener('click', () => {
             toggleSwitch.classList.toggle('active');
         });
 
-        refillBtn.addEventListener('click', () => {
-            currentFlares = maxFlares;
-            updateFlareCount();
-        });
-
-        dropBtn.addEventListener('click', () => {
-            if (currentFlares > 0) {
-                currentFlares--;
-                updateFlareCount();
-            }
-        });
-
         function updateFlareCount() {
             flareCountDisplay.textContent = currentFlares;
-            dropBtn.disabled = currentFlares === 0;
         }
 
         updateFlareCount();
