@@ -1,16 +1,9 @@
-Here's a basic **HTML-based chatting website** where users can communicate with each other. This example focuses on the front end using HTML, CSS, and JavaScript, while simulating the backend using WebSockets for real-time communication. 
-
-For real-world deployment, you’d need a server-side technology (e.g., Node.js, Python) and a database to manage user messages and authentication.
-
-### Complete Code for an HTML-based Chatting Website:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatApp - Real-time Chat</title>
+    <title>ChatApp - AI Chat</title>
     <style>
         * {
             margin: 0;
@@ -95,8 +88,6 @@ For real-world deployment, you’d need a server-side technology (e.g., Node.js,
     </div>
 
     <script>
-        const ws = new WebSocket('wss://echo.websocket.org'); // WebSocket test server
-
         const messagesContainer = document.getElementById("messages");
         const input = document.getElementById("message-input");
         const sendBtn = document.getElementById("send-btn");
@@ -110,13 +101,35 @@ For real-world deployment, you’d need a server-side technology (e.g., Node.js,
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
+        // Simulate AI response logic
+        function getAIResponse(userMessage) {
+            // Simple AI response logic (can be replaced with API call for advanced AI)
+            const responses = {
+                "hi": "Hello! How can I help you today?",
+                "how are you": "I'm an AI, so I don't have feelings, but I'm here to help!",
+                "what is your name": "I'm ChatBot, your friendly assistant!",
+                "bye": "Goodbye! Have a great day!",
+            };
+
+            // Default response if no match found
+            const defaultResponse = "I'm not sure how to respond to that. Can you ask me something else?";
+
+            // Return a predefined response or the default response
+            return responses[userMessage.toLowerCase()] || defaultResponse;
+        }
+
         // Send message when button is clicked
         sendBtn.addEventListener('click', function () {
             const messageText = input.value.trim();
             if (messageText) {
-                ws.send(messageText); // Send message via WebSocket
-                appendMessage('You', messageText); // Display in user's chat
+                appendMessage('You', messageText);  // Display user's message
                 input.value = '';
+
+                // Simulate AI response with a short delay
+                setTimeout(() => {
+                    const aiResponse = getAIResponse(messageText);
+                    appendMessage('AI', aiResponse);  // Display AI's response
+                }, 1000);
             }
         });
 
@@ -126,27 +139,6 @@ For real-world deployment, you’d need a server-side technology (e.g., Node.js,
                 sendBtn.click();
             }
         });
-
-        // Listen for incoming messages from the WebSocket server
-        ws.onmessage = function (event) {
-            appendMessage('Stranger', event.data); // Display incoming message from others
-        };
     </script>
 </body>
 </html>
-```
-
-### Explanation:
-
-#### 1. **HTML Structure:**
-   - The page contains a `#chat-container` that holds two sections:
-     - `#messages`: Displays chat messages.
-     - `#input-container`: Contains an input field and a button for users to send messages.
-
-#### 2. **CSS Styling:**
-   - The chat box is styled with clean, minimal design principles, with auto-scrolling behavior in the message area to show the latest messages.
-   - The button has hover effects for a more interactive feel.
-
-#### 3. **JavaScript:**
-   - **WebSocket connection:** Uses `WebSocket` to establish a real-time connection to the server.
-     - For testing purposes, I used `wss://echo.websocket.org`, a
