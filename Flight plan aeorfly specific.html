@@ -1,9 +1,16 @@
+Here's a basic **HTML-based chatting website** where users can communicate with each other. This example focuses on the front end using HTML, CSS, and JavaScript, while simulating the backend using WebSockets for real-time communication. 
+
+For real-world deployment, you’d need a server-side technology (e.g., Node.js, Python) and a database to manage user messages and authentication.
+
+### Complete Code for an HTML-based Chatting Website:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hadios - Wallpaper Gallery</title>
+    <title>ChatApp - Real-time Chat</title>
     <style>
         * {
             margin: 0;
@@ -12,146 +19,134 @@
         }
 
         body {
-            background-color: #000;
-            color: #fff;
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        .container {
-            text-align: center;
-            padding: 20px;
-        }
-
-        header h1 {
-            margin-bottom: 20px;
-            font-size: 2.5em;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            padding: 10px;
-        }
-
-        .wallpaper {
-            width: 100%;
-            height: auto;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-        }
-
-        .wallpaper:hover {
-            transform: scale(1.05);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            padding-top: 60px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .modal-content {
-            margin: auto;
-            display: block;
-            max-width: 80%;
-            max-height: 80%;
-            border-radius: 8px;
-        }
-
-        .close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .close:hover, .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .download-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
+        #chat-container {
+            width: 400px;
             background-color: #fff;
-            color: #000;
-            text-decoration: none;
-            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #messages .message {
+            margin-bottom: 15px;
+        }
+
+        #messages .message p {
+            padding: 10px;
+            background-color: #f1f1f1;
             border-radius: 5px;
+        }
+
+        #messages .message .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        #input-container {
+            display: flex;
+        }
+
+        #input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        #input-container button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
             cursor: pointer;
         }
 
-        .download-btn:hover {
-            background-color: #ddd;
+        #input-container button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Hadios</h1>
-        </header>
-        <section class="gallery">
-            <!-- Wallpaper thumbnails -->
-            <img src="images/wallpaper1.jpg" alt="Wallpaper 1" class="wallpaper">
-            <img src="images/wallpaper2.jpg" alt="Wallpaper 2" class="wallpaper">
-            <img src="images/wallpaper3.jpg" alt="Wallpaper 3" class="wallpaper">
-            <img src="images/wallpaper4.jpg" alt="Wallpaper 4" class="wallpaper">
-            <!-- Add more images as needed -->
-        </section>
-    </div>
-
-    <!-- Fullscreen Modal for viewing wallpaper -->
-    <div id="fullscreenModal" class="modal">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="fullImage">
-        <a id="downloadBtn" download class="download-btn">Download</a>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Type a message..." />
+            <button id="send-btn">Send</button>
+        </div>
     </div>
 
     <script>
-        // Get elements
-        const modal = document.getElementById("fullscreenModal");
-        const fullImage = document.getElementById("fullImage");
-        const downloadBtn = document.getElementById("downloadBtn");
-        const closeModal = document.getElementsByClassName("close")[0];
+        const ws = new WebSocket('wss://echo.websocket.org'); // WebSocket test server
 
-        // Open modal when wallpaper is clicked
-        document.querySelectorAll(".wallpaper").forEach((img) => {
-            img.addEventListener("click", function () {
-                modal.style.display = "block";
-                fullImage.src = this.src;
-                downloadBtn.href = this.src;
-            });
+        const messagesContainer = document.getElementById("messages");
+        const input = document.getElementById("message-input");
+        const sendBtn = document.getElementById("send-btn");
+
+        // Function to append messages to the chat window
+        function appendMessage(username, text) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<span class="username">${username}:</span><p>${text}</p>`;
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Send message when button is clicked
+        sendBtn.addEventListener('click', function () {
+            const messageText = input.value.trim();
+            if (messageText) {
+                ws.send(messageText); // Send message via WebSocket
+                appendMessage('You', messageText); // Display in user's chat
+                input.value = '';
+            }
         });
 
-        // Close modal when 'x' is clicked
-        closeModal.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // Close modal when user clicks outside the image
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+        // Send message when Enter key is pressed
+        input.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                sendBtn.click();
             }
-        }
+        });
+
+        // Listen for incoming messages from the WebSocket server
+        ws.onmessage = function (event) {
+            appendMessage('Stranger', event.data); // Display incoming message from others
+        };
     </script>
 </body>
 </html>
+```
+
+### Explanation:
+
+#### 1. **HTML Structure:**
+   - The page contains a `#chat-container` that holds two sections:
+     - `#messages`: Displays chat messages.
+     - `#input-container`: Contains an input field and a button for users to send messages.
+
+#### 2. **CSS Styling:**
+   - The chat box is styled with clean, minimal design principles, with auto-scrolling behavior in the message area to show the latest messages.
+   - The button has hover effects for a more interactive feel.
+
+#### 3. **JavaScript:**
+   - **WebSocket connection:** Uses `WebSocket` to establish a real-time connection to the server.
+     - For testing purposes, I used `wss://echo.websocket.org`, a
