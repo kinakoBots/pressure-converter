@@ -2,147 +2,156 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F-16 CM System</title>
+    <title>Hadios - Wallpaper Gallery</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: black;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
             margin: 0;
-            font-family: 'Orbitron', sans-serif;
+            padding: 0;
         }
 
-        .panel {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #222;
+        .container {
+            text-align: center;
             padding: 20px;
-            border: 2px solid #888;
-            box-shadow: inset 0 0 15px #000, 0 0 10px #00ff00;
-            width: 180px;
-            height: 180px;
-            position: relative;
         }
 
-        .border-lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid white;
+        header h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
         }
 
-        .display-box {
-            position: relative;
-            background: #111;
-            border: 2px solid #444;
-            box-shadow: inset 0 0 5px #00ff00;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 5px;
-            width: 60px;
-            height: 30px;
-            color: #00ff00;
-            font-size: 28px;
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 10px;
         }
 
-        .toggle-box {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 10px;
-        }
-
-        .toggle-switch {
-            width: 24px;
-            height: 24px;
-            background: #555;
-            border: 2px solid #666;
-            border-radius: 50%;
+        .wallpaper {
+            width: 100%;
+            height: auto;
             cursor: pointer;
-            box-shadow: inset 0 0 3px #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
         }
 
-        .toggle-switch::after {
-            content: '';
+        .wallpaper:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 80%;
+            max-height: 80%;
+            border-radius: 8px;
+        }
+
+        .close {
             position: absolute;
-            width: 8px;
-            height: 20px;
-            background: #ccc;
-            border: 1px solid #999;
-            border-radius: 2px;
-            transform-origin: bottom;
-            transform: rotate(-30deg);
-            transition: transform 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            transform: rotate(30deg);
-        }
-
-        .label {
-            color: white;
-            font-size: 12px;
-            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
             font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .label-fl {
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
+        .close:hover, .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        .label-on {
-            top: 50%;
-            left: -25px;
-            transform: translateY(-50%);
+        .download-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .label-on-right {
-            top: 50%;
-            right: -25px;
-            transform: translateY(-50%);
+        .download-btn:hover {
+            background-color: #ddd;
         }
     </style>
 </head>
 <body>
-    <div class="panel">
-        <div class="border-lines">
-            <div class="toggle-box">
-                <span class="label label-fl">FL</span>
-                <div class="toggle-switch" id="toggleSwitch"></div>
-                <span class="label label-on">ON</span>
-            </div>
-            <div class="display-box" id="flareCount">44</div>
-            <span class="label label-on-right">ON</span>
-        </div>
+    <div class="container">
+        <header>
+            <h1>Hadios</h1>
+        </header>
+        <section class="gallery">
+            <!-- Wallpaper thumbnails -->
+            <img src="images/wallpaper1.jpg" alt="Wallpaper 1" class="wallpaper">
+            <img src="images/wallpaper2.jpg" alt="Wallpaper 2" class="wallpaper">
+            <img src="images/wallpaper3.jpg" alt="Wallpaper 3" class="wallpaper">
+            <img src="images/wallpaper4.jpg" alt="Wallpaper 4" class="wallpaper">
+            <!-- Add more images as needed -->
+        </section>
+    </div>
+
+    <!-- Fullscreen Modal for viewing wallpaper -->
+    <div id="fullscreenModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="fullImage">
+        <a id="downloadBtn" download class="download-btn">Download</a>
     </div>
 
     <script>
-        const toggleSwitch = document.getElementById('toggleSwitch');
+        // Get elements
+        const modal = document.getElementById("fullscreenModal");
+        const fullImage = document.getElementById("fullImage");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const closeModal = document.getElementsByClassName("close")[0];
 
-        toggleSwitch.addEventListener('click', () => {
-            toggleSwitch.classList.toggle('active');
+        // Open modal when wallpaper is clicked
+        document.querySelectorAll(".wallpaper").forEach((img) => {
+            img.addEventListener("click", function () {
+                modal.style.display = "block";
+                fullImage.src = this.src;
+                downloadBtn.href = this.src;
+            });
         });
+
+        // Close modal when 'x' is clicked
+        closeModal.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Close modal when user clicks outside the image
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
