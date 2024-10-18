@@ -1,13 +1,4 @@
-To incorporate a "Negotiate" option, we can allow users to either accept the initial offer from each country or try to negotiate for a higher price. If the user chooses to negotiate, the country will either accept the new price or decline based on a probability (e.g., 50% chance of success).
-
-Here’s the updated version of the HTML and JavaScript with these changes:
-
-1. **Countries make an offer based on demand** (random quantities for each product).
-2. **User can accept or negotiate the offer**. During negotiation, the user can propose a new price, and the country will decide whether to accept it.
-
-### Updated HTML and JavaScript:
-
-```html
+html
 <!DOCTYPE html>
 <html>
 <head>
@@ -98,11 +89,3 @@ Here’s the updated version of the HTML and JavaScript with these changes:
     </script>
 </body>
 </html>
-```
-
-### Key Features Added:
-1. **Random Country Offers:** Countries offer to buy random quantities of your products based on a multiplier (to simulate differing demand in each country).
-2. **Accept Offer Button:** Allows the user to accept the current price and quantity offer from a country.
-3. **Negotiate Button:** Prompts the user to enter a new price, with a 50% chance of the negotiation being accepted by the country.
-
-You can extend this further by adding more products, improving the negotiation logic, or including more detailed tracking of total sales and revenue.
