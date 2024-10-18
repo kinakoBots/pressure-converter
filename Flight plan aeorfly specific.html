@@ -1,241 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Simulator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: #007BFF;
-        }
-        .form-section, .offers-section {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        input[type="text"], input[type="number"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .mood-bar {
-            margin-top: 20px;
-            text-align: center;
-        }
-        progress {
-            width: 100%;
-            height: 20px;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>HECA Iran Aircraft Manufacturing Industries</h1>
-        </header>
-        
-        <section id="production" class="form-section">
-            <h2>Production Options</h2>
-            <label for="product1">Product 1:</label>
-            <input type="text" id="product1" placeholder="Product name">
-            <label for="price1">Price:</label>
-            <input type="number" id="price1" placeholder="Price">
-            <label for="quantity1">Quantity Available:</label>
-            <input type="number" id="quantity1" placeholder="Quantity">
+Got it! Below is an updated version of your business simulator that organizes the content into separate pages accessed through a sidebar. The customer mood bar will only appear during negotiations. 
 
-            <label for="product2">Product 2:</label>
-            <input type="text" id="product2" placeholder="Product name">
-            <label for="price2">Price:</label>
-            <input type="number" id="price2" placeholder="Price">
-            <label for="quantity2">Quantity Available:</label>
-            <input type="number" id="quantity2" placeholder="Quantity">
+### Updated Code Structure
 
-            <button onclick="startSimulation()">Start Simulation</button>
-        </section>
-
-        <section id="offers" class="offers-section" style="display: none;">
-            <h2>Country Offers</h2>
-            <div id="offers-list"></div>
-            <div id="thank-you-message" style="display: none; color: green; font-weight: bold;"></div>
-        </section>
-
-        <div class="mood-bar">
-            <label for="mood">Customer Mood: </label>
-            <progress id="mood" value="100" max="100"></progress>
-        </div>
-    </div>
-
-    <script>
-        let mood = 100;
-
-        function startSimulation() {
-            const product1 = {
-                name: document.getElementById("product1").value,
-                price: parseFloat(document.getElementById("price1").value),
-                quantity: parseInt(document.getElementById("quantity1").value)
-            };
-
-            const product2 = {
-                name: document.getElementById("product2").value,
-                price: parseFloat(document.getElementById("price2").value),
-                quantity: parseInt(document.getElementById("quantity2").value)
-            };
-
-            // Validate inputs
-            if (!product1.name || !product2.name || isNaN(product1.price) || isNaN(product2.price) || isNaN(product1.quantity) || isNaN(product2.quantity)) {
-                alert("Please fill in all fields correctly.");
-                return;
-            }
-
-            document.getElementById("production").style.display = "none";
-            document.getElementById("offers").style.display = "block";
-
-            loadOffers(product1, product2);
-        }
-
-        function loadOffers(product1, product2) {
-            const countries = [
-                { name: "Russia", demandMultiplier: 1.2 },
-                { name: "Iraq", demandMultiplier: 0.8 },
-                { name: "Germany", demandMultiplier: 1.0 },
-                { name: "USA", demandMultiplier: 1.5 },
-                { name: "China", demandMultiplier: 1.3 }
-            ];
-
-            const offersList = document.getElementById("offers-list");
-            offersList.innerHTML = ""; // Clear previous offers
-
-            countries.forEach(country => {
-                const offerQuantity1 = Math.floor(Math.random() * product1.quantity * country.demandMultiplier);
-                const offerPrice1 = (product1.price * country.demandMultiplier).toFixed(2);
-
-                const offerQuantity2 = Math.floor(Math.random() * product2.quantity * country.demandMultiplier);
-                const offerPrice2 = (product2.price * country.demandMultiplier).toFixed(2);
-
-                const offerDiv = document.createElement("div");
-                offerDiv.innerHTML = `
-                    <h3>${country.name} Offers:</h3>
-                    <p>${product1.name}: Wants to buy ${offerQuantity1} units at $${offerPrice1}/unit</p>
-                    <p>${product2.name}: Wants to buy ${offerQuantity2} units at $${offerPrice2}/unit</p>
-                    <button onclick="acceptOffer('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, ${product1.quantity}, ${product2.quantity}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Accept Offer</button>
-                    <button onclick="negotiate('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Negotiate</button>
-                    <hr>
-                `;
-                offersList.appendChild(offerDiv);
-            });
-        }
-
-        function acceptOffer(country, product1Name, quantity1, price1, product1Quantity, product2Quantity, product2Name, quantity2, price2) {
-            const thankYouMessage = document.getElementById("thank-you-message");
-            thankYouMessage.innerHTML = `Thank you! ${country} accepted the offer for ${quantity1} units of ${product1Name} at $${price1}/unit and ${quantity2} units of ${product2Name} at $${price2}/unit.`;
-            thankYouMessage.style.display = "block";
-
-            // Update the remaining quantity for products
-            product1Quantity -= quantity1;
-            product2Quantity -= quantity2;
-
-            // Reset the offers after acceptance
-            document.getElementById("offers-list").innerHTML = "";
-            loadOffers({ name: product1Name, price: price1, quantity: product1Quantity }, { name: product2Name, price: price2, quantity: product2Quantity });
-        }
-
-        function negotiate(country, product1Name, quantity1, price1, product2Name, quantity2, price2) {
-            let newPrice = prompt(`Negotiate with ${country}: Enter a new price for ${product1Name}. Current offer is $${price1}/unit:`);
-
-            if (newPrice !== null) {
-                newPrice = parseFloat(newPrice);
-                if (isNaN(newPrice) || newPrice <= 0) {
-                    alert("Invalid price. Please try again.");
-                    return;
-                }
-
-                // 50% chance of successful negotiation
-                if (Math.random() > 0.5) {
-                    alert(`${country} accepted the new price of $${newPrice}/unit for ${product1Name}.`);
-                    acceptOffer(country, product1Name, quantity1, newPrice.toFixed(2), 0, 0, product2Name, quantity2, price2);
-                } else {
-                    alert(`${country} rejected the new price and decided to stick with the original offer.`);
-                    Certainly! Below is the continuation of the JavaScript code, completing the negotiation process and including the logic for handling the mood bar when negotiations take too long.
-
-### Complete JavaScript Code (continued)
-
-```javascript
-                    // Decrease mood if negotiation fails
-                    mood -= 10;
-                    updateMood();
-                }
-            }
-        }
-
-        function updateMood() {
-            const moodBar = document.getElementById("mood");
-            moodBar.value = mood;
-
-            if (mood <= 0) {
-                alert("The customer has given up due to prolonged negotiation!");
-                mood = 100; // Reset mood
-                moodBar.value = mood; // Reset mood bar
-                document.getElementById("offers-list").innerHTML = ""; // Clear offers
-                
-                // Reload offers with the original quantities
-                loadOffers(
-                    {
-                        name: document.getElementById("product1").value,
-                        price: parseFloat(document.getElementById("price1").value),
-                        quantity: parseInt(document.getElementById("quantity1").value)
-                    },
-                    {
-                        name: document.getElementById("product2").value,
-                        price: parseFloat(document.getElementById("price2").value),
-                        quantity: parseInt(document.getElementById("quantity2").value)
-                    }
-                );
-            }
-        }
-    </script>
-</body>
-</html>
-```
-
-### Full Code Recap
-
-Here’s the complete code all together, with the necessary sections and styling, including the negotiation process and mood management:
+This implementation uses a sidebar for navigation and includes a conditional display of the customer mood bar.
 
 ```html
 <!DOCTYPE html>
@@ -250,6 +17,30 @@ Here’s the complete code all together, with the necessary sections and styling
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            background: #007BFF;
+            padding: 20px;
+            color: white;
+        }
+        .sidebar h2 {
+            color: white;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .sidebar a:hover {
+            background: #0056b3;
+        }
+        .content {
+            flex: 1;
             padding: 20px;
         }
         .container {
@@ -260,11 +51,7 @@ Here’s the complete code all together, with the necessary sections and styling
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h1 {
+        h1, h2 {
             color: #007BFF;
         }
         .form-section, .offers-section {
@@ -305,12 +92,13 @@ Here’s the complete code all together, with the necessary sections and styling
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Business Simulator</h1>
-        </header>
-        
-        <section id="production" class="form-section">
+    <div class="sidebar">
+        <h2>Business Simulator</h2>
+        <a href="#" onclick="showPage('production')">Production Options</a>
+        <a href="#" onclick="showPage('offers')">Country Offers</a>
+    </div>
+    <div class="content">
+        <div id="production" class="container">
             <h2>Production Options</h2>
             <label for="product1">Product 1:</label>
             <input type="text" id="product1" placeholder="Product name">
@@ -327,22 +115,27 @@ Here’s the complete code all together, with the necessary sections and styling
             <input type="number" id="quantity2" placeholder="Quantity">
 
             <button onclick="startSimulation()">Start Simulation</button>
-        </section>
+        </div>
 
-        <section id="offers" class="offers-section" style="display: none;">
+        <div id="offers" class="container" style="display: none;">
             <h2>Country Offers</h2>
             <div id="offers-list"></div>
             <div id="thank-you-message" style="display: none; color: green; font-weight: bold;"></div>
-        </section>
-
-        <div class="mood-bar">
-            <label for="mood">Customer Mood: </label>
-            <progress id="mood" value="100" max="100"></progress>
+            <div class="mood-bar" id="mood-bar" style="display: none;">
+                <label for="mood">Customer Mood: </label>
+                <progress id="mood" value="100" max="100"></progress>
+            </div>
         </div>
     </div>
 
     <script>
         let mood = 100;
+
+        function showPage(page) {
+            document.getElementById("production").style.display = "none";
+            document.getElementById("offers").style.display = "none";
+            document.getElementById(page).style.display = "block";
+        }
 
         function startSimulation() {
             const product1 = {
@@ -363,9 +156,7 @@ Here’s the complete code all together, with the necessary sections and styling
                 return;
             }
 
-            document.getElementById("production").style.display = "none";
-            document.getElementById("offers").style.display = "block";
-
+            showPage('offers'); // Show offers page
             loadOffers(product1, product2);
         }
 
@@ -416,8 +207,76 @@ Here’s the complete code all together, with the necessary sections and styling
         }
 
         function negotiate(country, product1Name, quantity1, price1, product2Name, quantity2, price2) {
+            const moodBar = document.getElementById("mood-bar");
+            moodBar.style.display = "block"; // Show mood bar during negotiation
+
             let newPrice = prompt(`Negotiate with ${country}: Enter a new price for ${product1Name}. Current offer is $${price1}/unit:`);
 
             if (newPrice !== null) {
                 newPrice = parseFloat(newPrice);
-                if (isNaN(newPrice) ||
+                if (isNaN(newPrice) || newPrice <= 0) {
+                    alert("Invalid price. Please try again.");
+                    return;
+                }
+
+                // 50% chance of successful negotiation
+                if (Sure! Here’s the continuation of the JavaScript code that includes the negotiation logic, updating the mood, and ensuring the mood bar functions correctly. The complete structure will ensure that everything integrates seamlessly into the existing HTML framework.
+
+### Continuation of JavaScript Code
+
+```javascript
+                // 50% chance of successful negotiation
+                if (Math.random() < 0.5) {
+                    alert(`Negotiation successful! New price for ${product1Name} is $${newPrice.toFixed(2)}/unit.`);
+                    price1 = newPrice.toFixed(2);
+                } else {
+                    alert("Negotiation failed.");
+                    mood -= 10; // Decrease mood on failed negotiation
+                }
+            }
+
+            // Update the mood bar
+            updateMood();
+
+            // Start a timeout to track negotiation duration
+            const negotiationTimeout = setTimeout(() => {
+                mood -= 20; // Decrease mood if negotiation takes too long
+                updateMood();
+                if (mood <= 0) {
+                    alert("The customer has given up due to prolonged negotiation!");
+                    resetSimulation();
+                }
+            }, 30000); // 30 seconds timeout for negotiation
+
+            // Function to update the mood bar
+            function updateMood() {
+                const moodBar = document.getElementById("mood");
+                moodBar.value = mood;
+            }
+
+            // Clear timeout when the negotiation is resolved (either accepted or failed)
+            const resolveNegotiation = () => {
+                clearTimeout(negotiationTimeout);
+                moodBar.style.display = "none"; // Hide mood bar after negotiation
+            };
+
+            // Add buttons to accept or refuse after negotiation
+            const negotiationDiv = document.createElement("div");
+            negotiationDiv.innerHTML = `
+                <button onclick="acceptOffer('${country}', '${product1Name}', ${quantity1}, '${price1}', ${product1Quantity}, ${product2Quantity}, '${product2Name}', ${quantity2}, '${price2}'); resolveNegotiation();">Accept New Offer</button>
+                <button onclick="alert('Negotiation ended. No changes made.'); resolveNegotiation();">End Negotiation</button>
+            `;
+            document.getElementById("offers-list").appendChild(negotiationDiv);
+        }
+
+        function resetSimulation() {
+            // Reset mood and clear offers
+            mood = 100; 
+            document.getElementById("mood").value = mood;
+            document.getElementById("offers-list").innerHTML = ""; // Clear offers
+            document.getElementById("thank-you-message").style.display = "none"; // Hide thank you message
+            showPage('production'); // Return to production options
+        }
+    </script>
+</body>
+</html>
