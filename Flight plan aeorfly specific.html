@@ -7,78 +7,111 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000;
+            background-color: #121212; /* Darker background for a modern look */
             color: #fff;
             margin: 0;
-            padding: 0;
             display: flex;
+            transition: margin-left 0.3s; /* Smooth transition for content */
         }
         .sidebar {
-            width: 200px;
+            width: 250px; /* Wider sidebar */
             background-color: #1a1a1a;
             padding: 20px;
             transition: transform 0.3s ease;
             position: fixed;
             height: 100%;
-            left: -200px; /* Hidden by default */
+            left: -250px; /* Hidden by default */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
         }
         .sidebar.active {
-            transform: translateX(200px); /* Slide in */
+            transform: translateX(250px); /* Slide in */
         }
         .sidebar h2 {
             color: #ff0000;
-            font-size: 24px;
+            font-size: 28px; /* Larger header */
             margin: 0 0 20px;
+            text-align: center; /* Centered title */
         }
         .sidebar button {
             background-color: #2c2c2c;
             color: white;
             border: none;
-            padding: 10px;
+            padding: 12px;
             width: 100%;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-bottom: 15px; /* More space between buttons */
+            font-size: 16px; /* Larger button text */
+            transition: background-color 0.3s; /* Smooth hover transition */
         }
         .sidebar button:hover {
             background-color: #ff0000;
         }
         .content {
-            margin-left: 220px; /* Space for sidebar */
+            margin-left: 250px; /* Space for sidebar */
             padding: 20px;
             flex-grow: 1;
+            transition: margin-left 0.3s; /* Smooth transition for content */
         }
         h2 {
             color: #ff0000;
-            font-size: 24px;
+            font-size: 28px; /* Larger section titles */
+            border-bottom: 2px solid #ff0000; /* Underline effect */
+            padding-bottom: 10px; /* Space under title */
         }
         .section {
             background-color: #1a1a1a;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Shadow for depth */
         }
         .empty-message {
             color: #b3b3b3;
             font-size: 18px;
             text-align: center;
+            margin-top: 20px; /* Space above message */
         }
         .btn {
             display: block;
             width: 100%;
             background-color: #ff0000;
             color: white;
-            padding: 10px;
+            padding: 12px;
             border: none;
             border-radius: 5px;
             text-align: center;
-            text-decoration: none;
             font-size: 16px;
             margin-top: 10px;
             cursor: pointer;
+            transition: background-color 0.3s; /* Smooth hover transition */
         }
         .btn:hover {
             background-color: #cc0000;
+        }
+        #toggleSidebar {
+            background-color: #2c2c2c;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            transition: background-color 0.3s; /* Smooth hover transition */
+        }
+        #toggleSidebar:hover {
+            background-color: #ff0000;
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .content {
+                margin-left: 200px;
+            }
         }
     </style>
 </head>
@@ -91,7 +124,7 @@
     </div>
 
     <div class="content">
-        <button id="toggleSidebar" onclick="toggleSidebar()">☰ Toggle Menu</button>
+        <button id="toggleSidebar" onclick="toggleSidebar()">☰</button>
         
         <div id="investing" class="section">
             <h2>Investing</h2>
@@ -111,7 +144,16 @@
 
     <script>
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
+            const sidebar = document.getElementById('sidebar');
+            const content = document.querySelector('.content');
+            sidebar.classList.toggle('active');
+
+            // Adjust the content margin based on sidebar state
+            if (sidebar.classList.contains('active')) {
+                content.style.marginLeft = '250px'; // Space for expanded sidebar
+            } else {
+                content.style.marginLeft = '0'; // No space when hidden
+            }
         }
 
         function showSection(section) {
