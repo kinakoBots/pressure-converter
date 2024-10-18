@@ -1,44 +1,136 @@
-html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        .form-section, .offers-section {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .mood-bar {
+            margin-top: 20px;
+            text-align: center;
+        }
+        progress {
+            width: 100%;
+            height: 20px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Business Simulator</h1>
-    
-    <h2>Production Options</h2>
-    <label for="product1">Product 1:</label>
-    <input type="text" id="product1" placeholder="Product name">
-    <label for="price1">Price:</label>
-    <input type="number" id="price1" placeholder="Price">
-    <label for="quantity1">Quantity Available:</label>
-    <input type="number" id="quantity1" placeholder="Quantity">
+    <div class="container">
+        <header>
+            <h1>HECA</h1>
+        </header>
+        
+        <section id="production" class="form-section">
+            <h2>Production Options</h2>
+            <label for="product1">Product 1:</label>
+            <input type="text" id="product1" placeholder="Product name">
+            <label for="price1">Price:</label>
+            <input type="number" id="price1" placeholder="Price">
+            <label for="quantity1">Quantity Available:</label>
+            <input type="number" id="quantity1" placeholder="Quantity">
 
-    <label for="product2">Product 2:</label>
-    <input type="text" id="product2" placeholder="Product name">
-    <label for="price2">Price:</label>
-    <input type="number" id="price2" placeholder="Price">
-    <label for="quantity2">Quantity Available:</label>
-    <input type="number" id="quantity2" placeholder="Quantity">
+            <label for="product2">Product 2:</label>
+            <input type="text" id="product2" placeholder="Product name">
+            <label for="price2">Price:</label>
+            <input type="number" id="price2" placeholder="Price">
+            <label for="quantity2">Quantity Available:</label>
+            <input type="number" id="quantity2" placeholder="Quantity">
 
-    <button onclick="startSimulation()">Start Simulation</button>
+            <button onclick="startSimulation()">Start Simulation</button>
+        </section>
 
-    <h2>Offers from Countries</h2>
-    <div id="offers"></div>
+        <section id="offers" class="offers-section" style="display: none;">
+            <h2>Country Offers</h2>
+            <div id="offers-list"></div>
+            <div id="thank-you-message" style="display: none; color: green; font-weight: bold;"></div>
+        </section>
+
+        <div class="mood-bar">
+            <label for="mood">Customer Mood: </label>
+            <progress id="mood" value="100" max="100"></progress>
+        </div>
+    </div>
 
     <script>
+        let mood = 100;
+
         function startSimulation() {
-            let product1 = document.getElementById("product1").value;
-            let price1 = parseFloat(document.getElementById("price1").value);
-            let quantity1 = parseInt(document.getElementById("quantity1").value);
+            const product1 = {
+                name: document.getElementById("product1").value,
+                price: parseFloat(document.getElementById("price1").value),
+                quantity: parseInt(document.getElementById("quantity1").value)
+            };
 
-            let product2 = document.getElementById("product2").value;
-            let price2 = parseFloat(document.getElementById("price2").value);
-            let quantity2 = parseInt(document.getElementById("quantity2").value);
+            const product2 = {
+                name: document.getElementById("product2").value,
+                price: parseFloat(document.getElementById("price2").value),
+                quantity: parseInt(document.getElementById("quantity2").value)
+            };
 
-            // List of countries with random demand
-            let countries = [
+            // Validate inputs
+            if (!product1.name || !product2.name || isNaN(product1.price) || isNaN(product2.price) || isNaN(product1.quantity) || isNaN(product2.quantity)) {
+                alert("Please fill in all fields correctly.");
+                return;
+            }
+
+            document.getElementById("production").style.display = "none";
+            document.getElementById("offers").style.display = "block";
+
+            loadOffers(product1, product2);
+        }
+
+        function loadOffers(product1, product2) {
+            const countries = [
                 { name: "Russia", demandMultiplier: 1.2 },
                 { name: "Iraq", demandMultiplier: 0.8 },
                 { name: "Germany", demandMultiplier: 1.0 },
@@ -46,46 +138,286 @@ html
                 { name: "China", demandMultiplier: 1.3 }
             ];
 
-            // Clear previous offers
-            document.getElementById("offers").innerHTML = "";
+            const offersList = document.getElementById("offers-list");
+            offersList.innerHTML = ""; // Clear previous offers
 
-            // Generate offers for each country
             countries.forEach(country => {
-                let offerQuantity1 = Math.floor(Math.random() * quantity1 * country.demandMultiplier);
-                let offerPrice1 = (price1 * country.demandMultiplier).toFixed(2);
+                const offerQuantity1 = Math.floor(Math.random() * product1.quantity * country.demandMultiplier);
+                const offerPrice1 = (product1.price * country.demandMultiplier).toFixed(2);
 
-                let offerQuantity2 = Math.floor(Math.random() * quantity2 * country.demandMultiplier);
-                let offerPrice2 = (price2 * country.demandMultiplier).toFixed(2);
+                const offerQuantity2 = Math.floor(Math.random() * product2.quantity * country.demandMultiplier);
+                const offerPrice2 = (product2.price * country.demandMultiplier).toFixed(2);
 
-                let offerDiv = document.createElement("div");
-                offerDiv.innerHTML = `<h3>${country.name} Offers:</h3>
-                                      <p>${product1}: Wants to buy ${offerQuantity1} units at $${offerPrice1}/unit</p>
-                                      <p>${product2}: Wants to buy ${offerQuantity2} units at $${offerPrice2}/unit</p>
-                                      <button onclick="acceptOffer('${country.name}', '${product1}', ${offerQuantity1}, ${offerPrice1})">Accept Offer</button>
-                                      <button onclick="negotiate('${country.name}', '${product1}', ${offerQuantity1}, ${offerPrice1})">Negotiate</button>
-                                      <br><br>`;
-                document.getElementById("offers").appendChild(offerDiv);
+                const offerDiv = document.createElement("div");
+                offerDiv.innerHTML = `
+                    <h3>${country.name} Offers:</h3>
+                    <p>${product1.name}: Wants to buy ${offerQuantity1} units at $${offerPrice1}/unit</p>
+                    <p>${product2.name}: Wants to buy ${offerQuantity2} units at $${offerPrice2}/unit</p>
+                    <button onclick="acceptOffer('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, ${product1.quantity}, ${product2.quantity}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Accept Offer</button>
+                    <button onclick="negotiate('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Negotiate</button>
+                    <hr>
+                `;
+                offersList.appendChild(offerDiv);
             });
         }
 
-        function acceptOffer(country, product, quantity, price) {
-            alert(`${country} accepted the offer for ${quantity} units of ${product} at $${price}/unit.`);
-            // You can add logic to reduce inventory, calculate total earnings, etc.
+        function acceptOffer(country, product1Name, quantity1, price1, product1Quantity, product2Quantity, product2Name, quantity2, price2) {
+            const thankYouMessage = document.getElementById("thank-you-message");
+            thankYouMessage.innerHTML = `Thank you! ${country} accepted the offer for ${quantity1} units of ${product1Name} at $${price1}/unit and ${quantity2} units of ${product2Name} at $${price2}/unit.`;
+            thankYouMessage.style.display = "block";
+
+            // Update the remaining quantity for products
+            product1Quantity -= quantity1;
+            product2Quantity -= quantity2;
+
+            // Reset the offers after acceptance
+            document.getElementById("offers-list").innerHTML = "";
+            loadOffers({ name: product1Name, price: price1, quantity: product1Quantity }, { name: product2Name, price: price2, quantity: product2Quantity });
         }
 
-        function negotiate(country, product, quantity, price) {
-            let newPrice = prompt(`Negotiate with ${country}: Enter a new price for ${product}. Current offer is $${price}/unit:`);
-            newPrice = parseFloat(newPrice);
+        function negotiate(country, product1Name, quantity1, price1, product2Name, quantity2, price2) {
+            let newPrice = prompt(`Negotiate with ${country}: Enter a new price for ${product1Name}. Current offer is $${price1}/unit:`);
 
-            // 50% chance of successful negotiation
-            if (Math.random() > 0.5) {
-                alert(`${country} accepted the new price of $${newPrice}/unit for ${product}.`);
-                // Add further logic for successful negotiation
-            } else {
-                alert(`${country} rejected the new price and decided to stick with the original offer.`);
-                // You can allow the user to accept the original offer again if desired
+            if (newPrice !== null) {
+                newPrice = parseFloat(newPrice);
+                if (isNaN(newPrice) || newPrice <= 0) {
+                    alert("Invalid price. Please try again.");
+                    return;
+                }
+
+                // 50% chance of successful negotiation
+                if (Math.random() > 0.5) {
+                    alert(`${country} accepted the new price of $${newPrice}/unit for ${product1Name}.`);
+                    acceptOffer(country, product1Name, quantity1, newPrice.toFixed(2), 0, 0, product2Name, quantity2, price2);
+                } else {
+                    alert(`${country} rejected the new price and decided to stick with the original offer.`);
+                    Certainly! Below is the continuation of the JavaScript code, completing the negotiation process and including the logic for handling the mood bar when negotiations take too long.
+
+### Complete JavaScript Code (continued)
+
+```javascript
+                    // Decrease mood if negotiation fails
+                    mood -= 10;
+                    updateMood();
+                }
+            }
+        }
+
+        function updateMood() {
+            const moodBar = document.getElementById("mood");
+            moodBar.value = mood;
+
+            if (mood <= 0) {
+                alert("The customer has given up due to prolonged negotiation!");
+                mood = 100; // Reset mood
+                moodBar.value = mood; // Reset mood bar
+                document.getElementById("offers-list").innerHTML = ""; // Clear offers
+                
+                // Reload offers with the original quantities
+                loadOffers(
+                    {
+                        name: document.getElementById("product1").value,
+                        price: parseFloat(document.getElementById("price1").value),
+                        quantity: parseInt(document.getElementById("quantity1").value)
+                    },
+                    {
+                        name: document.getElementById("product2").value,
+                        price: parseFloat(document.getElementById("price2").value),
+                        quantity: parseInt(document.getElementById("quantity2").value)
+                    }
+                );
             }
         }
     </script>
 </body>
 </html>
+```
+
+### Full Code Recap
+
+Here’s the complete code all together, with the necessary sections and styling, including the negotiation process and mood management:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        .form-section, .offers-section {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .mood-bar {
+            margin-top: 20px;
+            text-align: center;
+        }
+        progress {
+            width: 100%;
+            height: 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Business Simulator</h1>
+        </header>
+        
+        <section id="production" class="form-section">
+            <h2>Production Options</h2>
+            <label for="product1">Product 1:</label>
+            <input type="text" id="product1" placeholder="Product name">
+            <label for="price1">Price:</label>
+            <input type="number" id="price1" placeholder="Price">
+            <label for="quantity1">Quantity Available:</label>
+            <input type="number" id="quantity1" placeholder="Quantity">
+
+            <label for="product2">Product 2:</label>
+            <input type="text" id="product2" placeholder="Product name">
+            <label for="price2">Price:</label>
+            <input type="number" id="price2" placeholder="Price">
+            <label for="quantity2">Quantity Available:</label>
+            <input type="number" id="quantity2" placeholder="Quantity">
+
+            <button onclick="startSimulation()">Start Simulation</button>
+        </section>
+
+        <section id="offers" class="offers-section" style="display: none;">
+            <h2>Country Offers</h2>
+            <div id="offers-list"></div>
+            <div id="thank-you-message" style="display: none; color: green; font-weight: bold;"></div>
+        </section>
+
+        <div class="mood-bar">
+            <label for="mood">Customer Mood: </label>
+            <progress id="mood" value="100" max="100"></progress>
+        </div>
+    </div>
+
+    <script>
+        let mood = 100;
+
+        function startSimulation() {
+            const product1 = {
+                name: document.getElementById("product1").value,
+                price: parseFloat(document.getElementById("price1").value),
+                quantity: parseInt(document.getElementById("quantity1").value)
+            };
+
+            const product2 = {
+                name: document.getElementById("product2").value,
+                price: parseFloat(document.getElementById("price2").value),
+                quantity: parseInt(document.getElementById("quantity2").value)
+            };
+
+            // Validate inputs
+            if (!product1.name || !product2.name || isNaN(product1.price) || isNaN(product2.price) || isNaN(product1.quantity) || isNaN(product2.quantity)) {
+                alert("Please fill in all fields correctly.");
+                return;
+            }
+
+            document.getElementById("production").style.display = "none";
+            document.getElementById("offers").style.display = "block";
+
+            loadOffers(product1, product2);
+        }
+
+        function loadOffers(product1, product2) {
+            const countries = [
+                { name: "Russia", demandMultiplier: 1.2 },
+                { name: "Iraq", demandMultiplier: 0.8 },
+                { name: "Germany", demandMultiplier: 1.0 },
+                { name: "USA", demandMultiplier: 1.5 },
+                { name: "China", demandMultiplier: 1.3 }
+            ];
+
+            const offersList = document.getElementById("offers-list");
+            offersList.innerHTML = ""; // Clear previous offers
+
+            countries.forEach(country => {
+                const offerQuantity1 = Math.floor(Math.random() * product1.quantity * country.demandMultiplier);
+                const offerPrice1 = (product1.price * country.demandMultiplier).toFixed(2);
+
+                const offerQuantity2 = Math.floor(Math.random() * product2.quantity * country.demandMultiplier);
+                const offerPrice2 = (product2.price * country.demandMultiplier).toFixed(2);
+
+                const offerDiv = document.createElement("div");
+                offerDiv.innerHTML = `
+                    <h3>${country.name} Offers:</h3>
+                    <p>${product1.name}: Wants to buy ${offerQuantity1} units at $${offerPrice1}/unit</p>
+                    <p>${product2.name}: Wants to buy ${offerQuantity2} units at $${offerPrice2}/unit</p>
+                    <button onclick="acceptOffer('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, ${product1.quantity}, ${product2.quantity}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Accept Offer</button>
+                    <button onclick="negotiate('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Negotiate</button>
+                    <hr>
+                `;
+                offersList.appendChild(offerDiv);
+            });
+        }
+
+        function acceptOffer(country, product1Name, quantity1, price1, product1Quantity, product2Quantity, product2Name, quantity2, price2) {
+            const thankYouMessage = document.getElementById("thank-you-message");
+            thankYouMessage.innerHTML = `Thank you! ${country} accepted the offer for ${quantity1} units of ${product1Name} at $${price1}/unit and ${quantity2} units of ${product2Name} at $${price2}/unit.`;
+            thankYouMessage.style.display = "block";
+
+            // Update the remaining quantity for products
+            product1Quantity -= quantity1;
+            product2Quantity -= quantity2;
+
+            // Reset the offers after acceptance
+            document.getElementById("offers-list").innerHTML = "";
+            loadOffers({ name: product1Name, price: price1, quantity: product1Quantity }, { name: product2Name, price: price2, quantity: product2Quantity });
+        }
+
+        function negotiate(country, product1Name, quantity1, price1, product2Name, quantity2, price2) {
+            let newPrice = prompt(`Negotiate with ${country}: Enter a new price for ${product1Name}. Current offer is $${price1}/unit:`);
+
+            if (newPrice !== null) {
+                newPrice = parseFloat(newPrice);
+                if (isNaN(newPrice) ||
