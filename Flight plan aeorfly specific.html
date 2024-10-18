@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,8 +107,6 @@
             <input type="number" id="price2" placeholder="Price">
             <label for="quantity2">Quantity Available:</label>
             <input type="number" id="quantity2" placeholder="Quantity">
-
-            <button onclick="startSimulation()">Start Simulation</button>
         </div>
 
         <div id="offers" class="container" style="display: none;">
@@ -123,37 +122,52 @@
 
     <script>
         let mood = 100;
+        let product1, product2;
+        let simulationInterval;
+
+        const randomMessages = [
+            "Hi, we are interested in your products!",
+            "We would like to place an order soon!",
+            "Your products caught our attention!",
+            "We are eager to negotiate with you!",
+            "Can you provide more details about your offerings?"
+        ];
 
         function showPage(page) {
             document.getElementById("production").style.display = "none";
             document.getElementById("offers").style.display = "none";
             document.getElementById(page).style.display = "block";
+
+            if (page === "offers") {
+                startSimulation(); // Start simulation when viewing offers
+            }
         }
 
         function startSimulation() {
-            const product1 = {
+            // Gather product data from the input fields
+            product1 = {
                 name: document.getElementById("product1").value,
                 price: parseFloat(document.getElementById("price1").value),
                 quantity: parseInt(document.getElementById("quantity1").value)
             };
 
-            const product2 = {
+            product2 = {
                 name: document.getElementById("product2").value,
                 price: parseFloat(document.getElementById("price2").value),
                 quantity: parseInt(document.getElementById("quantity2").value)
             };
 
-            // Validate inputs
+            // Validate inputs before starting the simulation
             if (!product1.name || !product2.name || isNaN(product1.price) || isNaN(product2.price) || isNaN(product1.quantity) || isNaN(product2.quantity)) {
                 alert("Please fill in all fields correctly.");
                 return;
             }
 
-            showPage('offers'); // Show offers page
-            loadOffers(product1, product2);
+            // Start contacting countries every 60 seconds (60000 milliseconds)
+            simulationInterval = setInterval(() => loadOffers(), 60000);
         }
 
-        function loadOffers(product1, product2) {
+        function loadOffers() {
             const countries = [
                 { name: "Russia", demandMultiplier: 1.2 },
                 { name: "Iraq", demandMultiplier: 0.8 },
@@ -172,9 +186,12 @@
                 const offerQuantity2 = Math.floor(Math.random() * product2.quantity * country.demandMultiplier);
                 const offerPrice2 = (product2.price * country.demandMultiplier).toFixed(2);
 
+                const message = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+
                 const offerDiv = document.createElement("div");
                 offerDiv.innerHTML = `
                     <h3>${country.name} Offers:</h3>
+                    <p>${message}</p>
                     <p>${product1.name}: Wants to buy ${offerQuantity1} units at $${offerPrice1}/unit</p>
                     <p>${product2.name}: Wants to buy ${offerQuantity2} units at $${offerPrice2}/unit</p>
                     <button onclick="acceptOffer('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, ${product1.quantity}, ${product2.quantity}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Accept Offer</button>
@@ -196,70 +213,66 @@
 
             // Reset the offers after acceptance
             document.getElementById("offers-list").innerHTML = "";
-            loadOffers({ name: product1Name, price: price1, quantity: product1Quantity }, { name: product2Name, price: price2, quantity: product2Quantity });
+            loadOffers();
         }
 
         function negotiate(country, product1Name, quantity1, price1, product2Name, quantity2, price2) {
             const moodBar = document.getElementById("mood-bar");
             moodBar.style.display = "block"; // Show mood bar during negotiation
 
-            let newPrice = prompt(`Negotiate with ${country}: Enter a new price for ${product1Name}. Current offer is $${price1}/unit:`);
-
-            if (newPrice !== null) {
-                newPrice = parseFloat(newPrice);
-                if (isNaN(newPrice) || newPrice <= 0) {
-                    alert("Invalid price. Please try again.");
-                    return;
-                }
-
-                // 50% chance of successful negotiation
-                if (Sure! Here’s the continuation of the JavaScript code that includes the negotiation logic, updating the mood, and ensuring the mood bar functions correctly. The complete structure will ensure that everything integrates seamlessly into the existing HTML framework.
+            let newPrice = prompt(`Negotiate with Sure! Here’s the continuation of the JavaScript code for the negotiation process, where users can negotiate prices, and the mood bar reflects the customer's mood during negotiations.
 
 ### Continuation of JavaScript Code
 
 ```javascript
-                // 50% chance of successful negotiation
-                if (Math.random() < 0.5) {
+            let newPrice = prompt(`Negotiate with ${country} for ${product1Name}. Current price is $${price1}. What is your proposed price?`);
+
+            if (newPrice) {
+                newPrice = parseFloat(newPrice);
+                const successfulNegotiation = Math.random() < 0.5; // 50% chance of success
+
+                if (successfulNegotiation) {
                     alert(`Negotiation successful! New price for ${product1Name} is $${newPrice.toFixed(2)}/unit.`);
                     price1 = newPrice.toFixed(2);
                 } else {
                     alert("Negotiation failed.");
                     mood -= 10; // Decrease mood on failed negotiation
                 }
-            }
 
-            // Update the mood bar
-            updateMood();
-
-            // Start a timeout to track negotiation duration
-            const negotiationTimeout = setTimeout(() => {
-                mood -= 20; // Decrease mood if negotiation takes too long
+                // Update the mood bar
                 updateMood();
-                if (mood <= 0) {
-                    alert("The customer has given up due to prolonged negotiation!");
-                    resetSimulation();
-                }
-            }, 30000); // 30 seconds timeout for negotiation
 
-            // Function to update the mood bar
-            function updateMood() {
-                const moodBar = document.getElementById("mood");
-                moodBar.value = mood;
+                // Start a timeout to track negotiation duration
+                const negotiationTimeout = setTimeout(() => {
+                    mood -= 20; // Decrease mood if negotiation takes too long
+                    updateMood();
+                    if (mood <= 0) {
+                        alert("The customer has given up due to prolonged negotiation!");
+                        resetSimulation();
+                    }
+                }, 30000); // 30 seconds timeout for negotiation
+
+                // Clear timeout when the negotiation is resolved (either accepted or failed)
+                const resolveNegotiation = () => {
+                    clearTimeout(negotiationTimeout);
+                    moodBar.style.display = "none"; // Hide mood bar after negotiation
+                };
+
+                // Add buttons to accept or refuse after negotiation
+                const negotiationDiv = document.createElement("div");
+                negotiationDiv.innerHTML = `
+                    <button onclick="acceptOffer('${country}', '${product1Name}', ${quantity1}, '${price1}', ${product1.quantity}, ${product2.quantity}, '${product2Name}', ${quantity2}, '${price2}'); resolveNegotiation();">Accept New Offer</button>
+                    <button onclick="alert('Negotiation ended. No changes made.'); resolveNegotiation();">End Negotiation</button>
+                `;
+                document.getElementById("offers-list").appendChild(negotiationDiv);
+            } else {
+                alert("Negotiation canceled.");
             }
+        }
 
-            // Clear timeout when the negotiation is resolved (either accepted or failed)
-            const resolveNegotiation = () => {
-                clearTimeout(negotiationTimeout);
-                moodBar.style.display = "none"; // Hide mood bar after negotiation
-            };
-
-            // Add buttons to accept or refuse after negotiation
-            const negotiationDiv = document.createElement("div");
-            negotiationDiv.innerHTML = `
-                <button onclick="acceptOffer('${country}', '${product1Name}', ${quantity1}, '${price1}', ${product1Quantity}, ${product2Quantity}, '${product2Name}', ${quantity2}, '${price2}'); resolveNegotiation();">Accept New Offer</button>
-                <button onclick="alert('Negotiation ended. No changes made.'); resolveNegotiation();">End Negotiation</button>
-            `;
-            document.getElementById("offers-list").appendChild(negotiationDiv);
+        function updateMood() {
+            const moodBar = document.getElementById("mood");
+            moodBar.value = mood;
         }
 
         function resetSimulation() {
@@ -268,6 +281,7 @@
             document.getElementById("mood").value = mood;
             document.getElementById("offers-list").innerHTML = ""; // Clear offers
             document.getElementById("thank-you-message").style.display = "none"; // Hide thank you message
+            clearInterval(simulationInterval); // Clear the simulation interval
             showPage('production'); // Return to production options
         }
     </script>
