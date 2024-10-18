@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,282 +7,134 @@ html
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #000;
+            color: #fff;
             margin: 0;
-            display: flex;
-        }
-        .sidebar {
-            width: 200px;
-            background: #007BFF;
-            padding: 20px;
-            color: white;
-        }
-        .sidebar h2 {
-            color: white;
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 5px 0;
-        }
-        .sidebar a:hover {
-            background: #0056b3;
-        }
-        .content {
-            flex: 1;
-            padding: 20px;
+            padding: 0;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        h1, h2 {
-            color: #007BFF;
+        h2 {
+            color: #ff0000; /* Red header */
+            font-size: 24px;
         }
-        .form-section, .offers-section {
+        .section {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
             margin-bottom: 20px;
         }
-        label {
+        .portfolio-box {
+            background-color: #2c2c2c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .portfolio-box h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .portfolio-box p {
+            font-size: 16px;
+            color: #b3b3b3;
+        }
+        .portfolio-box .positive {
+            color: #00ff00; /* Green text for positive values */
+        }
+        .portfolio-box .neutral {
+            color: #ffffff;
+        }
+        .btn {
             display: block;
-            margin-top: 10px;
-        }
-        input[type="text"], input[type="number"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .mood-bar {
-            margin-top: 20px;
-            text-align: center;
-        }
-        progress {
             width: 100%;
-            height: 20px;
+            background-color: #ff0000; /* Red buttons */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
             margin-top: 10px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #cc0000;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .tabs button {
+            background-color: #1a1a1a;
+            border: none;
+            color: #ffffff;
+            padding: 10px;
+            flex-grow: 1;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+        .tabs button.active {
+            background-color: #ff0000;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Business Simulator</h2>
-        <a href="#" onclick="showPage('production')">Production Options</a>
-        <a href="#" onclick="showPage('offers')">Country Offers</a>
-    </div>
-    <div class="content">
-        <div id="production" class="container">
-            <h2>Production Options</h2>
-            <label for="product1">Product 1:</label>
-            <input type="text" id="product1" placeholder="Product name">
-            <label for="price1">Price:</label>
-            <input type="number" id="price1" placeholder="Price">
-            <label for="quantity1">Quantity Available:</label>
-            <input type="number" id="quantity1" placeholder="Quantity">
-
-            <label for="product2">Product 2:</label>
-            <input type="text" id="product2" placeholder="Product name">
-            <label for="price2">Price:</label>
-            <input type="number" id="price2" placeholder="Price">
-            <label for="quantity2">Quantity Available:</label>
-            <input type="number" id="quantity2" placeholder="Quantity">
+    <div class="container">
+        <!-- Investing Section (Existing) -->
+        <h2>Investing</h2>
+        <div class="tabs">
+            <button class="active">Shares</button>
+            <button>Real Estate</button>
+            <button>Cryptocurrency</button>
         </div>
-
-        <div id="offers" class="container" style="display: none;">
-            <h2>Country Offers</h2>
-            <div id="offers-list"></div>
-            <div id="thank-you-message" style="display: none; color: green; font-weight: bold;"></div>
-            <div class="mood-bar" id="mood-bar" style="display: none;">
-                <label for="mood">Customer Mood: </label>
-                <progress id="mood" value="100" max="100"></progress>
-            </div>
+        <div class="portfolio-box">
+            <h3>My Stock Portfolio</h3>
+            <p>Value of stock portfolio: <span class="neutral">$0.00</span></p>
+            <p>Estimated yield per hour: <span class="neutral">$0.00</span></p>
         </div>
+        <a href="#" class="btn">Stock Market</a>
+
+        <!-- Production Section (New) -->
+        <h2>Production</h2>
+        <div class="tabs">
+            <button class="active">Machinery</button>
+            <button>Labor</button>
+            <button>Resources</button>
+        </div>
+        <div class="portfolio-box">
+            <h3>Total Production Value</h3>
+            <p>Value: <span class="neutral">$0.00</span></p>
+            <p>Estimated yield per hour: <span class="neutral">$0.00</span></p>
+        </div>
+        <a href="#" class="btn">Production Overview</a>
+
+        <!-- Country Offers Section (New) -->
+        <h2>Country Offers</h2>
+        <div class="tabs">
+            <button class="active">Local</button>
+            <button>International</button>
+        </div>
+        <div class="portfolio-box">
+            <h3>Country Offers</h3>
+            <p>Number of offers: <span class="neutral">0</span></p>
+            <p>Offer value: <span class="neutral">$0.00</span></p>
+        </div>
+        <a href="#" class="btn">View Offers</a>
     </div>
 
     <script>
-        let mood = 100;
-        let product1, product2;
-        let simulationInterval;
-
-        const randomMessages = [
-            "Hi, we are interested in your products!",
-            "We would like to place an order soon!",
-            "Your products caught our attention!",
-            "We are eager to negotiate with you!",
-            "Can you provide more details about your offerings?"
-        ];
-
-        function showPage(page) {
-            document.getElementById("production").style.display = "none";
-            document.getElementById("offers").style.display = "none";
-            document.getElementById(page).style.display = "block";
-
-            if (page === "offers") {
-                startSimulation(); // Start simulation when viewing offers
-            }
-        }
-
-        function startSimulation() {
-            // Gather product data from the input fields
-            product1 = {
-                name: document.getElementById("product1").value,
-                price: parseFloat(document.getElementById("price1").value),
-                quantity: parseInt(document.getElementById("quantity1").value)
-            };
-
-            product2 = {
-                name: document.getElementById("product2").value,
-                price: parseFloat(document.getElementById("price2").value),
-                quantity: parseInt(document.getElementById("quantity2").value)
-            };
-
-            // Validate inputs before starting the simulation
-            if (!product1.name || !product2.name || isNaN(product1.price) || isNaN(product2.price) || isNaN(product1.quantity) || isNaN(product2.quantity)) {
-                alert("Please fill in all fields correctly.");
-                return;
-            }
-
-            // Start contacting countries every 60 seconds (60000 milliseconds)
-            simulationInterval = setInterval(() => loadOffers(), 60000);
-        }
-
-        function loadOffers() {
-            const countries = [
-                { name: "Russia", demandMultiplier: 1.2 },
-                { name: "Iraq", demandMultiplier: 0.8 },
-                { name: "Germany", demandMultiplier: 1.0 },
-                { name: "USA", demandMultiplier: 1.5 },
-                { name: "China", demandMultiplier: 1.3 }
-            ];
-
-            const offersList = document.getElementById("offers-list");
-            offersList.innerHTML = ""; // Clear previous offers
-
-            countries.forEach(country => {
-                const offerQuantity1 = Math.floor(Math.random() * product1.quantity * country.demandMultiplier);
-                const offerPrice1 = (product1.price * country.demandMultiplier).toFixed(2);
-
-                const offerQuantity2 = Math.floor(Math.random() * product2.quantity * country.demandMultiplier);
-                const offerPrice2 = (product2.price * country.demandMultiplier).toFixed(2);
-
-                const message = randomMessages[Math.floor(Math.random() * randomMessages.length)];
-
-                const offerDiv = document.createElement("div");
-                offerDiv.innerHTML = `
-                    <h3>${country.name} Offers:</h3>
-                    <p>${message}</p>
-                    <p>${product1.name}: Wants to buy ${offerQuantity1} units at $${offerPrice1}/unit</p>
-                    <p>${product2.name}: Wants to buy ${offerQuantity2} units at $${offerPrice2}/unit</p>
-                    <button onclick="acceptOffer('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, ${product1.quantity}, ${product2.quantity}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Accept Offer</button>
-                    <button onclick="negotiate('${country.name}', '${product1.name}', ${offerQuantity1}, ${offerPrice1}, '${product2.name}', ${offerQuantity2}, ${offerPrice2})">Negotiate</button>
-                    <hr>
-                `;
-                offersList.appendChild(offerDiv);
+        // JavaScript to handle tab switching
+        document.querySelectorAll('.tabs button').forEach(button => {
+            button.addEventListener('click', () => {
+                let parent = button.parentElement;
+                parent.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
             });
-        }
-
-        function acceptOffer(country, product1Name, quantity1, price1, product1Quantity, product2Quantity, product2Name, quantity2, price2) {
-            const thankYouMessage = document.getElementById("thank-you-message");
-            thankYouMessage.innerHTML = `Thank you! ${country} accepted the offer for ${quantity1} units of ${product1Name} at $${price1}/unit and ${quantity2} units of ${product2Name} at $${price2}/unit.`;
-            thankYouMessage.style.display = "block";
-
-            // Update the remaining quantity for products
-            product1Quantity -= quantity1;
-            product2Quantity -= quantity2;
-
-            // Reset the offers after acceptance
-            document.getElementById("offers-list").innerHTML = "";
-            loadOffers();
-        }
-
-        function negotiate(country, product1Name, quantity1, price1, product2Name, quantity2, price2) {
-            const moodBar = document.getElementById("mood-bar");
-            moodBar.style.display = "block"; // Show mood bar during negotiation
-
-            let newPrice = prompt(`Negotiate with Sure! Here’s the continuation of the JavaScript code for the negotiation process, where users can negotiate prices, and the mood bar reflects the customer's mood during negotiations.
-
-### Continuation of JavaScript Code
-
-```javascript
-            let newPrice = prompt(`Negotiate with ${country} for ${product1Name}. Current price is $${price1}. What is your proposed price?`);
-
-            if (newPrice) {
-                newPrice = parseFloat(newPrice);
-                const successfulNegotiation = Math.random() < 0.5; // 50% chance of success
-
-                if (successfulNegotiation) {
-                    alert(`Negotiation successful! New price for ${product1Name} is $${newPrice.toFixed(2)}/unit.`);
-                    price1 = newPrice.toFixed(2);
-                } else {
-                    alert("Negotiation failed.");
-                    mood -= 10; // Decrease mood on failed negotiation
-                }
-
-                // Update the mood bar
-                updateMood();
-
-                // Start a timeout to track negotiation duration
-                const negotiationTimeout = setTimeout(() => {
-                    mood -= 20; // Decrease mood if negotiation takes too long
-                    updateMood();
-                    if (mood <= 0) {
-                        alert("The customer has given up due to prolonged negotiation!");
-                        resetSimulation();
-                    }
-                }, 30000); // 30 seconds timeout for negotiation
-
-                // Clear timeout when the negotiation is resolved (either accepted or failed)
-                const resolveNegotiation = () => {
-                    clearTimeout(negotiationTimeout);
-                    moodBar.style.display = "none"; // Hide mood bar after negotiation
-                };
-
-                // Add buttons to accept or refuse after negotiation
-                const negotiationDiv = document.createElement("div");
-                negotiationDiv.innerHTML = `
-                    <button onclick="acceptOffer('${country}', '${product1Name}', ${quantity1}, '${price1}', ${product1.quantity}, ${product2.quantity}, '${product2Name}', ${quantity2}, '${price2}'); resolveNegotiation();">Accept New Offer</button>
-                    <button onclick="alert('Negotiation ended. No changes made.'); resolveNegotiation();">End Negotiation</button>
-                `;
-                document.getElementById("offers-list").appendChild(negotiationDiv);
-            } else {
-                alert("Negotiation canceled.");
-            }
-        }
-
-        function updateMood() {
-            const moodBar = document.getElementById("mood");
-            moodBar.value = mood;
-        }
-
-        function resetSimulation() {
-            // Reset mood and clear offers
-            mood = 100; 
-            document.getElementById("mood").value = mood;
-            document.getElementById("offers-list").innerHTML = ""; // Clear offers
-            document.getElementById("thank-you-message").style.display = "none"; // Hide thank you message
-            clearInterval(simulationInterval); // Clear the simulation interval
-            showPage('production'); // Return to production options
-        }
+        });
     </script>
 </body>
 </html>
