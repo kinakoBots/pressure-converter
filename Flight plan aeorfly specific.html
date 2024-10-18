@@ -11,12 +11,45 @@
             color: #fff;
             margin: 0;
             padding: 0;
+            display: flex;
         }
-        .container {
+        .sidebar {
+            width: 200px;
+            background-color: #1a1a1a;
             padding: 20px;
+            transition: transform 0.3s ease;
+            position: fixed;
+            height: 100%;
+            left: -200px; /* Hidden by default */
+        }
+        .sidebar.active {
+            transform: translateX(200px); /* Slide in */
+        }
+        .sidebar h2 {
+            color: #ff0000;
+            font-size: 24px;
+            margin: 0 0 20px;
+        }
+        .sidebar button {
+            background-color: #2c2c2c;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .sidebar button:hover {
+            background-color: #ff0000;
+        }
+        .content {
+            margin-left: 220px; /* Space for sidebar */
+            padding: 20px;
+            flex-grow: 1;
         }
         h2 {
-            color: #ff0000; /* Red header */
+            color: #ff0000;
             font-size: 24px;
         }
         .section {
@@ -25,30 +58,15 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        .portfolio-box {
-            background-color: #2c2c2c;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .portfolio-box h3 {
-            margin: 0;
-            font-size: 18px;
-        }
-        .portfolio-box p {
-            font-size: 16px;
+        .empty-message {
             color: #b3b3b3;
-        }
-        .portfolio-box .positive {
-            color: #00ff00; /* Green text for positive values */
-        }
-        .portfolio-box .neutral {
-            color: #ffffff;
+            font-size: 18px;
+            text-align: center;
         }
         .btn {
             display: block;
             width: 100%;
-            background-color: #ff0000; /* Red buttons */
+            background-color: #ff0000;
             color: white;
             padding: 10px;
             border: none;
@@ -62,79 +80,46 @@
         .btn:hover {
             background-color: #cc0000;
         }
-        .tabs {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-        .tabs button {
-            background-color: #1a1a1a;
-            border: none;
-            color: #ffffff;
-            padding: 10px;
-            flex-grow: 1;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-right: 5px;
-        }
-        .tabs button.active {
-            background-color: #ff0000;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Investing Section (Existing) -->
-        <h2>Investing</h2>
-        <div class="tabs">
-            <button class="active">Shares</button>
-            <button>Real Estate</button>
-            <button>Cryptocurrency</button>
-        </div>
-        <div class="portfolio-box">
-            <h3>My Stock Portfolio</h3>
-            <p>Value of stock portfolio: <span class="neutral">$0.00</span></p>
-            <p>Estimated yield per hour: <span class="neutral">$0.00</span></p>
-        </div>
-        <a href="#" class="btn">Stock Market</a>
+    <div class="sidebar" id="sidebar">
+        <h2>Business Simulator</h2>
+        <button onclick="showSection('investing')">Investing</button>
+        <button onclick="showSection('production')">Production</button>
+        <button onclick="showSection('offers')">Country Offers</button>
+    </div>
 
-        <!-- Production Section (New) -->
-        <h2>Production</h2>
-        <div class="tabs">
-            <button class="active">Machinery</button>
-            <button>Labor</button>
-            <button>Resources</button>
+    <div class="content">
+        <button id="toggleSidebar" onclick="toggleSidebar()">☰ Toggle Menu</button>
+        
+        <div id="investing" class="section">
+            <h2>Investing</h2>
+            <p class="empty-message">This section is under development. Please check back later.</p>
         </div>
-        <div class="portfolio-box">
-            <h3>Total Production Value</h3>
-            <p>Value: <span class="neutral">$0.00</span></p>
-            <p>Estimated yield per hour: <span class="neutral">$0.00</span></p>
-        </div>
-        <a href="#" class="btn">Production Overview</a>
 
-        <!-- Country Offers Section (New) -->
-        <h2>Country Offers</h2>
-        <div class="tabs">
-            <button class="active">Local</button>
-            <button>International</button>
+        <div id="production" class="section" style="display:none;">
+            <h2>Production</h2>
+            <p class="empty-message">This section is under development. Please check back later.</p>
         </div>
-        <div class="portfolio-box">
-            <h3>Country Offers</h3>
-            <p>Number of offers: <span class="neutral">0</span></p>
-            <p>Offer value: <span class="neutral">$0.00</span></p>
+
+        <div id="offers" class="section" style="display:none;">
+            <h2>Country Offers</h2>
+            <p class="empty-message">This section is under development. Please check back later.</p>
         </div>
-        <a href="#" class="btn">View Offers</a>
     </div>
 
     <script>
-        // JavaScript to handle tab switching
-        document.querySelectorAll('.tabs button').forEach(button => {
-            button.addEventListener('click', () => {
-                let parent = button.parentElement;
-                parent.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.style.display = 'none'; // Hide all sections
             });
-        });
+            document.getElementById(section).style.display = 'block'; // Show the selected section
+        }
     </script>
 </body>
 </html>
