@@ -17,11 +17,11 @@
             width: 250px;
             background-color: #1a1a1a;
             padding: 20px;
-            transition: transform 0.3s ease;
             position: fixed;
             height: 100%;
             left: -250px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
         }
         .sidebar.active {
             transform: translateX(250px);
@@ -157,7 +157,7 @@
 
         <div id="offers" class="section" style="display:none;">
             <h2>Country Offers</h2>
-            <p class="empty-message">This section is under development. Please check back later.</p>
+            <div id="countryOffersContainer"></div>
         </div>
     </div>
 
@@ -165,7 +165,9 @@
         let deliveryTimer;
         let deliveryCount = 0;
         const deliveryRequests = []; // Array to store requests
+        const countryOffers = []; // Array to store country offers
 
+        // Function to toggle the sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const content = document.querySelector('.content');
@@ -178,13 +180,19 @@
             }
         }
 
+        // Function to show the selected section
         function showSection(section) {
             document.querySelectorAll('.section').forEach(sec => {
                 sec.style.display = 'none';
             });
             document.getElementById(section).style.display = 'block';
+
+            if (section === 'offers') {
+                displayCountryOffers();
+            }
         }
 
+        // Function to create a production unit
         function createUnit() {
             const unitName = document.getElementById('unitName').value;
             const unitCost = document.getElementById('unitCost').value;
@@ -192,14 +200,23 @@
 
             if (unitName && unitCost > 0 && unitQuantity > 0) {
                 const request = {
-                    country: "Russia", // For demo purposes, this is static
                     unitName,
                     unitCost,
                     unitQuantity,
                 };
 
-                deliveryRequests.push(request);
+                // Automatically create requests from random countries
+                const countries = ["Russia", "Iraq", "China", "Brazil", "India"];
+                countries.forEach(country => {
+                    const offer = {
+                        country: country,
+                        ...request
+                    };
+                    deliveryRequests.push(offer);
+                });
+
                 displayRequests();
+                displayCountryOffers();
 
                 // Clear input fields
                 document.getElementById('unitName').value = '';
@@ -210,6 +227,7 @@
             }
         }
 
+        // Function to display negotiation requests
         function displayRequests() {
             const requestsContainer = document.getElementById('requestsContainer');
             requestsContainer.innerHTML = '';
@@ -226,6 +244,7 @@
             });
         }
 
+        // Function to accept a request
         function acceptRequest(index) {
             const request = deliveryRequests[index];
             deliveryCount++;
@@ -235,35 +254,30 @@
             deliveryDiv.id = `delivery-${deliveryCount}`;
             deliveryDiv.innerHTML = `
                 <strong>Payment Complete:</strong> ${request.country} has paid for ${request.unitQuantity} units of <em>${request.unitName}</em> at $${request.unitCost} each.
-                <span class="countdown" id="countdown-${deliveryCount}">1:00</span>
+                <span class="countdown" id="countdown-${deliveryCount}">1:00</                <span class="countdown" id="countdown-${deliveryCount}">1:00</span>
                 <button onclick="sendDelivery(${deliveryCount})">Send Delivery</button>
             `;
             deliveryContainer.appendChild(deliveryDiv);
-            
-            // Remove the request after accepting
-            deliveryRequests.splice(index, 1);
-            displayRequests();
 
-            // Start countdown timer for delivery
             startCountdown(deliveryCount);
+            deliveryRequests.splice(index, 1); // Remove the accepted request from the list
+            displayRequests(); // Refresh the request display
         }
 
+        // Function to negotiate the request price
         function negotiateRequest(index) {
             const request = deliveryRequests[index];
-            const newCost = prompt(`Negotiate price for ${request.unitName}. Current price: $${request.unitCost}`, request.unitCost);
-            if (newCost !== null && !isNaN(newCostCertainly! Let's continue from where the code was cut off. I’ll provide the complete functionality for the negotiation, countdown timer, and sending deliveries.
-
-### Continued JavaScript Functionality
-
-```javascript
+            const newCost = prompt(`Current price is $${request.unitCost}. Enter new price:`);
+            
             if (newCost !== null && !isNaN(newCost) && newCost > 0) {
-                request.unitCost = newCost;
-                displayRequests();
+                request.unitCost = newCost; // Update the price
+                displayRequests(); // Refresh the requests display
             } else {
                 alert("Invalid price entered. Negotiation failed.");
             }
         }
 
+        // Function to start the countdown for delivery
         function startCountdown(deliveryId) {
             let timeLeft = 60; // 1 minute countdown
             const countdownElement = document.getElementById(`countdown-${deliveryId}`);
@@ -281,6 +295,7 @@
             }, 1000);
         }
 
+        // Function to send the delivery
         function sendDelivery(deliveryId) {
             const deliveryDiv = document.getElementById(`delivery-${deliveryId}`);
             deliveryDiv.innerHTML += ` <strong>Delivery sent!</strong>`;
@@ -288,6 +303,25 @@
             setTimeout(() => {
                 deliveryDiv.remove(); // Remove delivery info after sending
             }, 5000); // Keep the message for 5 seconds
+        }
+
+        // Function to display country offers
+        function displayCountryOffers() {
+            const offersContainer = document.getElementById('countryOffersContainer');
+            offersContainer.innerHTML = '';
+
+            // Generate random offers
+            const countries = ["Russia", "Iraq", "China", "Brazil", "India"];
+            countries.forEach(country => {
+                const offer = document.createElement('div');
+                offer.className = 'negotiation-request';
+                offer.innerHTML = `<strong>${country}</strong> is interested in your products.`;
+                offersContainer.appendChild(offer);
+            });
+
+            if (offersContainer.innerHTML === '') {
+                offersContainer.innerHTML = `<p class="empty-message">No country offers available.</p>`;
+            }
         }
     </script>
 </body>
