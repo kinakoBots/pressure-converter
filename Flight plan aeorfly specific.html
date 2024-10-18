@@ -12,6 +12,8 @@
             margin: 0;
             display: flex;
             transition: margin-left 0.3s;
+            flex-direction: column; /* Updated to use flex column */
+            height: 100vh; /* Set height for full view */
         }
         .sidebar {
             width: 250px;
@@ -52,6 +54,8 @@
             padding: 20px;
             flex-grow: 1;
             transition: margin-left 0.3s;
+            display: flex;
+            flex-direction: column; /* Updated to use flex column */
         }
         h2 {
             color: #ff0000;
@@ -114,6 +118,16 @@
             color: #ffcc00;
             font-weight: bold;
         }
+        #notificationArea {
+            background-color: #2c2c2c;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            visibility: hidden; /* Hidden by default */
+        }
     </style>
 </head>
 <body>
@@ -161,8 +175,9 @@
         </div>
     </div>
 
+    <div id="notificationArea"></div>
+
     <script>
-        let deliveryTimer;
         let deliveryCount = 0;
         const deliveryRequests = []; // Array to store requests
         const countryOffers = []; // Array to store country offers
@@ -186,7 +201,6 @@
                 sec.style.display = 'none';
             });
             document.getElementById(section).style.display = 'block';
-
             if (section === 'offers') {
                 displayCountryOffers();
             }
@@ -208,15 +222,19 @@
                 // Automatically create requests from random countries
                 const countries = ["Russia", "Iraq", "China", "Brazil", "India"];
                 countries.forEach(country => {
+                    const offerQuantity = Math.floor(Math.random() * unitQuantity) + 1; // Random quantity
+                    const offerPrice = (unitCost * offerQuantity * 1.1).toFixed(2); // 10% markup
                     const offer = {
                         country: country,
-                        ...request
+                        unitName,
+                        offerQuantity,
+                        offerPrice
                     };
                     deliveryRequests.push(offer);
                 });
 
-                displayRequests();
-                displayCountryOffers();
+                displayRequests(); // Display the requests
+                showNotification(); // Show notification of interest
 
                 // Clear input fields
                 document.getElementById('unitName').value = '';
@@ -236,12 +254,30 @@
                 const requestDiv = document.createElement('div');
                 requestDiv.className = 'negotiation-request';
                 requestDiv.innerHTML = `
-                    <strong>${request.country}</strong> wants to buy ${request.unitQuantity} units of <em>${request.unitName}</em> at $${request.unitCost} each.
+                    <strong>${request.country}</strong> wants to buy ${request.offerQuantity} units of <em>${request.unitName}</em> for $${request.offerPrice} each.
                     <button onclick="acceptRequest(${index})">Accept</button>
+                    <button onclick="declineRequest(${index})">DeclineAbsolutely! Below is the continuation of the code, which includes the functionality for accepting, declining, or negotiating country offers, along with the full functionality previously described. Let's complete the script:
+
+```html
                     <button onclick="negotiateRequest(${index})">Negotiate</button>
                 `;
                 requestsContainer.appendChild(requestDiv);
             });
+
+            if (deliveryRequests.length === 0) {
+                requestsContainer.innerHTML = `<p class="empty-message">No negotiation requests available.</p>`;
+            }
+        }
+
+        // Function to show notification when countries are interested
+        function showNotification() {
+            const notificationArea = document.getElementById('notificationArea');
+            notificationArea.innerHTML = `<strong>Countries are interested in your production!</strong>`;
+            notificationArea.style.visibility = 'visible';
+
+            setTimeout(() => {
+                notificationArea.style.visibility = 'hidden';
+            }, 5000); // Hide notification after 5 seconds
         }
 
         // Function to accept a request
@@ -253,8 +289,8 @@
             const deliveryDiv = document.createElement('div');
             deliveryDiv.id = `delivery-${deliveryCount}`;
             deliveryDiv.innerHTML = `
-                <strong>Payment Complete:</strong> ${request.country} has paid for ${request.unitQuantity} units of <em>${request.unitName}</em> at $${request.unitCost} each.
-                <span class="countdown" id="countdown-${deliveryCount}">1:00</                <span class="countdown" id="countdown-${deliveryCount}">1:00</span>
+                <strong>Accepted:</strong> ${request.offerQuantity} of ${request.unitName} for $${request.offerPrice} each.
+                <span class="countdown" id="countdown-${deliveryCount}">1:00</span>
                 <button onclick="sendDelivery(${deliveryCount})">Send Delivery</button>
             `;
             deliveryContainer.appendChild(deliveryDiv);
@@ -264,13 +300,19 @@
             displayRequests(); // Refresh the request display
         }
 
+        // Function to decline a request
+        function declineRequest(index) {
+            deliveryRequests.splice(index, 1); // Remove the declined request from the list
+            displayRequests(); // Refresh the request display
+        }
+
         // Function to negotiate the request price
         function negotiateRequest(index) {
             const request = deliveryRequests[index];
-            const newCost = prompt(`Current price is $${request.unitCost}. Enter new price:`);
-            
+            const newCost = prompt(`Current price is $${request.offerPrice}. Enter new price:`);
+
             if (newCost !== null && !isNaN(newCost) && newCost > 0) {
-                request.unitCost = newCost; // Update the price
+                request.offerPrice = newCost; // Update the price
                 displayRequests(); // Refresh the requests display
             } else {
                 alert("Invalid price entered. Negotiation failed.");
@@ -290,7 +332,7 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(countdownInterval);
-                    alert(`Delivery to ${deliveryId} is ready to be sent!`);
+                    alert(`Delivery is ready to be sent!`);
                 }
             }, 1000);
         }
@@ -310,8 +352,8 @@
             const offersContainer = document.getElementById('countryOffersContainer');
             offersContainer.innerHTML = '';
 
-            // Generate random offers
-            const countries = ["Russia", "Iraq", "China", "Brazil", "India"];
+            // Simulate offers from countries
+            const countries = ["Russia", "Iraq", "China", "Brazil",];
             countries.forEach(country => {
                 const offer = document.createElement('div');
                 offer.className = 'negotiation-request';
