@@ -7,30 +7,30 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212; /* Darker background for a modern look */
+            background-color: #121212;
             color: #fff;
             margin: 0;
             display: flex;
-            transition: margin-left 0.3s; /* Smooth transition for content */
+            transition: margin-left 0.3s;
         }
         .sidebar {
-            width: 250px; /* Wider sidebar */
+            width: 250px;
             background-color: #1a1a1a;
             padding: 20px;
             transition: transform 0.3s ease;
             position: fixed;
             height: 100%;
-            left: -250px; /* Hidden by default */
+            left: -250px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
         }
         .sidebar.active {
-            transform: translateX(250px); /* Slide in */
+            transform: translateX(250px);
         }
         .sidebar h2 {
             color: #ff0000;
-            font-size: 28px; /* Larger header */
+            font-size: 28px;
             margin: 0 0 20px;
-            text-align: center; /* Centered title */
+            text-align: center;
         }
         .sidebar button {
             background-color: #2c2c2c;
@@ -40,37 +40,37 @@
             width: 100%;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 15px; /* More space between buttons */
-            font-size: 16px; /* Larger button text */
-            transition: background-color 0.3s; /* Smooth hover transition */
+            margin-bottom: 15px;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         .sidebar button:hover {
             background-color: #ff0000;
         }
         .content {
-            margin-left: 250px; /* Space for sidebar */
+            margin-left: 250px;
             padding: 20px;
             flex-grow: 1;
-            transition: margin-left 0.3s; /* Smooth transition for content */
+            transition: margin-left 0.3s;
         }
         h2 {
             color: #ff0000;
-            font-size: 28px; /* Larger section titles */
-            border-bottom: 2px solid #ff0000; /* Underline effect */
-            padding-bottom: 10px; /* Space under title */
+            font-size: 28px;
+            border-bottom: 2px solid #ff0000;
+            padding-bottom: 10px;
         }
         .section {
             background-color: #1a1a1a;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         .empty-message {
             color: #b3b3b3;
             font-size: 18px;
             text-align: center;
-            margin-top: 20px; /* Space above message */
+            margin-top: 20px;
         }
         .btn {
             display: block;
@@ -84,28 +84,13 @@
             font-size: 16px;
             margin-top: 10px;
             cursor: pointer;
-            transition: background-color 0.3s; /* Smooth hover transition */
+            transition: background-color 0.3s;
         }
         .btn:hover {
             background-color: #cc0000;
         }
-        #toggleSidebar {
-            background-color: #2c2c2c;
-            color: white;
-            border: none;
-            padding: 12px;
-            cursor: pointer;
-            border-radius: 5px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            transition: background-color 0.3s; /* Smooth hover transition */
-        }
-        #toggleSidebar:hover {
-            background-color: #ff0000;
-        }
         .form-group {
-            margin-bottom: 15px; /* Space between form fields */
+            margin-bottom: 15px;
         }
         .form-group label {
             display: block;
@@ -126,7 +111,7 @@
             border-radius: 5px;
         }
         .countdown {
-            color: #ffcc00; /* Yellow for countdown */
+            color: #ffcc00;
             font-weight: bold;
         }
     </style>
@@ -142,12 +127,12 @@
     <div class="content">
         <button id="toggleSidebar" onclick="toggleSidebar()">☰</button>
         
-        <div id="investing" class="section">
+        <div id="investing" class="section" style="display:none;">
             <h2>Investing</h2>
             <p class="empty-message">This section is under development. Please check back later.</p>
         </div>
 
-        <div id="production" class="section" style="display:none;">
+        <div id="production" class="section">
             <h2>Production</h2>
             <div class="form-group">
                 <label for="unitName">Unit Name</label>
@@ -178,27 +163,26 @@
 
     <script>
         let deliveryTimer;
-        let deliveryRequests = [];
         let deliveryCount = 0;
+        const deliveryRequests = []; // Array to store requests
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const content = document.querySelector('.content');
             sidebar.classList.toggle('active');
 
-            // Adjust the content margin based on sidebar state
             if (sidebar.classList.contains('active')) {
-                content.style.marginLeft = '250px'; // Space for expanded sidebar
+                content.style.marginLeft = '250px';
             } else {
-                content.style.marginLeft = '0'; // No space when hidden
+                content.style.marginLeft = '0';
             }
         }
 
         function showSection(section) {
             document.querySelectorAll('.section').forEach(sec => {
-                sec.style.display = 'none'; // Hide all sections
+                sec.style.display = 'none';
             });
-            document.getElementById(section).style.display = 'block'; // Show the selected section
+            document.getElementById(section).style.display = 'block';
         }
 
         function createUnit() {
@@ -206,9 +190,9 @@
             const unitCost = document.getElementById('unitCost').value;
             const unitQuantity = document.getElementById('unitQuantity').value;
 
-            if (unitName && unitCost && unitQuantity) {
+            if (unitName && unitCost > 0 && unitQuantity > 0) {
                 const request = {
-                    country: "Russia", // This can be random or based on selection
+                    country: "Russia", // For demo purposes, this is static
                     unitName,
                     unitCost,
                     unitQuantity,
@@ -221,11 +205,8 @@
                 document.getElementById('unitName').value = '';
                 document.getElementById('unitCost').value = '';
                 document.getElementById('unitQuantity').value = '';
-
-                // Start timer for delivery
-                startDeliveryTimer();
             } else {
-                alert("Please fill all fields to create a unit.");
+                alert("Please fill all fields correctly to create a unit.");
             }
         }
 
@@ -239,12 +220,6 @@
                 requestDiv.innerHTML = `
                     <strong>${request.country}</strong> wants to buy ${request.unitQuantity} units of <em>${request.unitName}</em> at $${request.unitCost} each.
                     <button onclick="acceptRequest(${index})">Accept</button>
-                    <button onclick="negotiateRequest(${index})
-                    Continuing from where we left off, we’ll complete the negotiation and acceptance process for the requests, along with the countdown timer for delivery. Here’s the complete JavaScript and HTML code needed to implement these features:
-
-### Continued JavaScript Functionality
-
-```html
                     <button onclick="negotiateRequest(${index})">Negotiate</button>
                 `;
                 requestsContainer.appendChild(requestDiv);
@@ -276,6 +251,11 @@
         function negotiateRequest(index) {
             const request = deliveryRequests[index];
             const newCost = prompt(`Negotiate price for ${request.unitName}. Current price: $${request.unitCost}`, request.unitCost);
+            if (newCost !== null && !isNaN(newCostCertainly! Let's continue from where the code was cut off. I’ll provide the complete functionality for the negotiation, countdown timer, and sending deliveries.
+
+### Continued JavaScript Functionality
+
+```javascript
             if (newCost !== null && !isNaN(newCost) && newCost > 0) {
                 request.unitCost = newCost;
                 displayRequests();
@@ -288,14 +268,14 @@
             let timeLeft = 60; // 1 minute countdown
             const countdownElement = document.getElementById(`countdown-${deliveryId}`);
 
-            deliveryTimer = setInterval(() => {
+            const countdownInterval = setInterval(() => {
                 timeLeft--;
                 const minutes = Math.floor(timeLeft / 60);
                 const seconds = timeLeft % 60;
                 countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
                 if (timeLeft <= 0) {
-                    clearInterval(deliveryTimer);
+                    clearInterval(countdownInterval);
                     alert(`Delivery to ${deliveryId} is ready to be sent!`);
                 }
             }, 1000);
