@@ -1,1 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Production Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
 
+        /* Sidebar styling */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #e60000;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #333;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Form styling */
+        .form-container {
+            background-color: #262626;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-container h2 {
+            color: #e60000;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .form-group button {
+            background-color: #e60000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #b30000;
+        }
+
+        /* List styling */
+        .unit-list {
+            background-color: #262626;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .unit-list h2 {
+            color: #e60000;
+        }
+
+        .unit-list-item {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .unit-list-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Country interest simulation button */
+        .simulate-btn {
+            background-color: #e60000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .simulate-btn:hover {
+            background-color: #b30000;
+        }
+
+        /* Output for country interest */
+        .country-interest {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #262626;
+            border-radius: 8px;
+        }
+
+        .country-interest h2 {
+            color: #e60000;
+        }
+
+        .country-interest p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#">Dashboard</a>
+        <a href="#">Create Units</a>
+        <a href="#">Settings</a>
+        <a href="#">About</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Unit Creation Form -->
+        <div class="form-container">
+            <h2>Create Production Unit</h2>
+            <div class="form-group">
+                <label for="unitName">Unit Name:</label>
+                <input type="text" id="unitName" placeholder="Enter unit name">
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" placeholder="Enter quantity">
+            </div>
+            <div class="form-group">
+                <label for="price">Price per Unit:</label>
+                <input type="number" id="price" placeholder="Enter price">
+            </div>
+            <div class="form-group">
+                <button onclick="addUnit()">Add Unit</button>
+            </div>
+        </div>
+
+        <!-- Unit List -->
+        <div class="unit-list">
+            <h2>Created Units</h2>
+            <div id="unitList"></div>
+        </div>
+
+        <!-- Simulate Country Interest -->
+        <button class="simulate-btn" onclick="simulateInterest()">Simulate Country Interest</button>
+
+        <!-- Country Interest Output -->
+        <div class="country-interest">
+            <h2>Country Interest</h2>
+            <div id="interestOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        let units = [];
+        const countries = ['Iraq', 'Russia', 'China', 'Germany', 'France', 'India'];
+
+        // Function to add a unit
+        function addUnit() {
+            const unitName = document.getElementById('unitName').value;
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('price').value;
+
+            if (unitName && quantity && price) {
+                const unit = {
+                    name: unitName,
+                    quantity: quantity,
+                    price: price
+                };
+                units.push(unit);
+                displayUnits();
+                clearForm();
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        // Function to display units in the list
+        function displayUnits() {
+            const unitList = document.getElementById('unitList');            unitList.innerHTML = ''; // Clear existing units
+            units.forEach((unit, index) => {
+                const unitItem = document.createElement('div');
+                unitItem.className = 'unit-list-item';
+                unitItem.innerHTML = `
+                    <strong>${unit.name}</strong><br>
+                    Quantity: ${unit.quantity}<br>
+                    Price: $${unit.price}
+                `;
+                unitList.appendChild(unitItem);
+            });
+        }
+
+        // Function to clear the form inputs
+        function clearForm() {
+            document.getElementById('unitName').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('price').value = '';
+        }
+
+        // Function to simulate country interest
+        function simulateInterest() {
+            const interestOutput = document.getElementById('interestOutput');
+            interestOutput.innerHTML = ''; // Clear existing interest output
+            const interestedUnits = units.filter(unit => Math.random() > 0.5); // Randomly filter units
+            
+            interestedUnits.forEach(unit => {
+                const interestedCountry = countries[Math.floor(Math.random() * countries.length)];
+                const interestItem = document.createElement('p');
+                interestItem.innerText = `${interestedCountry} is interested in ${unit.name} (Quantity: ${unit.quantity}, Price: $${unit.price})`;
+                interestOutput.appendChild(interestItem);
+            });
+
+            if (interestedUnits.length === 0) {
+                interestOutput.innerHTML = '<p>No countries are interested in the available units at this time.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
