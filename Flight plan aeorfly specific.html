@@ -200,6 +200,7 @@
             const quantity = document.getElementById('quantity').value;
             const price = document.getElementById('price').value;
 
+            // Ensure all fields are filled
             if (unitName && quantity && price) {
                 const unit = {
                     name: unitName,
@@ -243,14 +244,14 @@
             interestOutput.innerHTML = ''; // Clear existing interest output
             const interestedUnits = units.filter(() => Math.random() > 0.5); // Randomly filter units
             
-            interestedUnits.forEach(unit => {
-                const interestedCountry = countries[Math.floor(Math.random() * countries.length)];
-                const interestItem = document.createElement('p');
-                interestItem.innerText = `${interestedCountry} is interested in ${unit.name} (Quantity: ${unit.quantity}, Price: $${unit.price})`;
-                interestOutput.appendChild(interestItem);
-            });
-
-            if (interestedUnits.length === 0) {
+            if (interestedUnits.length > 0) {
+                interestedUnits.forEach(unit => {
+                    const interestedCountry = countries[Math.floor(Math.random() * countries.length)];
+                    const interestItem = document.createElement('p');
+                    interestItem.innerText = `${interestedCountry} is interested in ${unit.name} (Quantity: ${unit.quantity}, Price: $${unit.price})`;
+                    interestOutput.appendChild(interestItem);
+                });
+            } else {
                 interestOutput.innerHTML = '<p>No countries are interested in the available units at this time.</p>';
             }
         }
