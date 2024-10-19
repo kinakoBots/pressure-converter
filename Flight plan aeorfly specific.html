@@ -11,6 +11,7 @@
             padding: 0;
             background-color: #1a1a1a;
             color: #fff;
+            display: flex;
         }
 
         /* Sidebar styling */
@@ -22,6 +23,7 @@
             left: 0;
             background-color: #e60000;
             padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
         }
 
         .sidebar a {
@@ -34,12 +36,13 @@
         }
 
         .sidebar a:hover {
-            background-color: #333;
+            background-color: #b30000;
         }
 
         .main-content {
             margin-left: 250px;
             padding: 20px;
+            width: calc(100% - 250px);
         }
 
         /* Form styling */
@@ -113,7 +116,7 @@
             color: #fff;
             padding: 10px 20px;
             border: none;
-            border-radius: 4            border-radius: 4px;
+            border-radius: 4px;
             cursor: pointer;
             margin-top: 20px;
         }
@@ -213,8 +216,9 @@
 
         // Function to display units in the list
         function displayUnits() {
-            const unitList = document.getElementById('unitList');            unitList.innerHTML = ''; // Clear existing units
-            units.forEach((unit, index) => {
+            const unitList = document.getElementById('unitList');
+            unitList.innerHTML = ''; // Clear existing units
+            units.forEach((unit) => {
                 const unitItem = document.createElement('div');
                 unitItem.className = 'unit-list-item';
                 unitItem.innerHTML = `
@@ -237,7 +241,7 @@
         function simulateInterest() {
             const interestOutput = document.getElementById('interestOutput');
             interestOutput.innerHTML = ''; // Clear existing interest output
-            const interestedUnits = units.filter(unit => Math.random() > 0.5); // Randomly filter units
+            const interestedUnits = units.filter(() => Math.random() > 0.5); // Randomly filter units
             
             interestedUnits.forEach(unit => {
                 const interestedCountry = countries[Math.floor(Math.random() * countries.length)];
