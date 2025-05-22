@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>QuickChat - Join and Chat Instantly</title>
+    <meta name="description" content="Join QuickChat instantly as a guest and start chatting in real-time. No registration required!" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="QuickChat">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Temporary Icon Solution -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='192' height='192' viewBox='0 0 192 192' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='192' height='192' rx='48' fill='%234F46E5'/%3E%3Cpath d='M142 80C142 92.1503 132.15 102 120 102C107.85 102 98 92.1503 98 80C98 67.8497 107.85 58 120 58C132.15 58 142 67.8497 142 80Z' fill='white'/%3E%3Cpath d='M94 112C94 124.15 84.1503 134 72 134C59.8497 134 50 124.15 50 112C50 99.8497 59.8497 90 72 90C84.1503 90 94 99.8497 94 112Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M120 106C139.33 106 155 119.43 155 136V146H85V136C85 119.43 100.67 106 120 106Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M72 138C91.33 138 107 151.43 107 168V178H37V168C37 151.43 52.67 138 72 138Z' fill='white'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg width='192' height='192' viewBox='0 0 192 192' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='192' height='192' rx='48' fill='%234F46E5'/%3E%3Cpath d='M142 80C142 92.1503 132.15 102 120 102C107.85 102 98 92.1503 98 80C98 67.8497 107.85 58 120 58C132.15 58 142 67.8497 142 80Z' fill='white'/%3E%3Cpath d='M94 112C94 124.15 84.1503 134 72 134C59.8497 134 50 124.15 50 112C50 99.8497 59.8497 90 72 90C84.1503 90 94 99.8497 94 112Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M120 106C139.33 106 155 119.43 155 136V146H85V136C85 119.43 100.67 106 120 106Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M72 138C91.33 138 107 151.43 107 168V178H37V168C37 151.43 52.67 138 72 138Z' fill='white'/%3E%3C/svg%3E">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+              console.error('Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
+    
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>

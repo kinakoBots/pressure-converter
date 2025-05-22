@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: quickchat
+    env: node
+    buildCommand: cp render-package.json package.json && npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
